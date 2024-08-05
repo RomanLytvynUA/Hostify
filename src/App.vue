@@ -22,13 +22,15 @@ th {
   color: white !important;
 }
 
-input {
+input,
+select {
   background-color: #3b3b3d !important;
   border-color: white !important;
   color: white !important;
 }
 
-input:focus {
+input:focus,
+select:focus {
   box-shadow: none !important;
   outline: 0 none !important;
   border-color: white !important;

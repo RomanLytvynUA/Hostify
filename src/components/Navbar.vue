@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
+import Player from './Player.vue'
 
 const route = useRoute()
 const routeName = computed(() => route.name)
@@ -14,6 +15,7 @@ const routeName = computed(() => route.name)
                 <img src="../assets/logo.png" alt="logo" width="50" style="margin-right: 5px;">
                 {{ routeName == 'home' ? '' : 'Hostify' }}
             </RouterLink>
+            <Player style="margin-left: 10px;" v-if="routeName == 'game'" />
         </div>
     </nav>
 </template>

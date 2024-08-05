@@ -1,5 +1,8 @@
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router';
+
+const router = useRouter()
 
 const tournamentName = ref('')
 const game = ref('')
@@ -39,7 +42,6 @@ function downloadPreset() {
 function loadDataFromPreset() {
     const input = document.createElement('input');
     input.type = 'file';
-    input.accept = 'application/json';
     input.accept = '.json';
     input.style.display = 'none';
 
@@ -97,7 +99,7 @@ function validateSettings() {
         }
     }
     if (valid) {
-        console.log('starting the game...')
+        router.push('/game')
     }
 }
 </script>
