@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router';
+import { useStore } from "@/store.js"
 
 const router = useRouter()
 
@@ -99,6 +100,7 @@ function validateSettings() {
         }
     }
     if (valid) {
+        useStore().playersData = playersData.value
         router.push('/game')
     }
 }

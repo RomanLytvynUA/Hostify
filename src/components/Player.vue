@@ -1,5 +1,6 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, computed, watch } from 'vue'
+import { useStore } from '@/store.js'
 
 const songs = {
     'Standart': [
@@ -19,8 +20,8 @@ const songs = {
     ],
 }
 
-const playing = ref(false)
-const selectedSong = ref(songs[0])
+const playing = computed(() => useStore().musicPlaying)
+const selectedSong = ref(songs.Standart[0].name)
 
 watch(() => playing.value, () => {
     const player = document.getElementById(selectedSong.value)
@@ -47,7 +48,7 @@ watch(() => selectedSong.value, (newSong, oldSong) => {
                     <option v-for="song in songs[group]">{{ song.name }}</option>
                 </optgroup>
             </select>
-            <i style="font-size: 25px;" @click="playing = !playing"
+            <i style="font-size: 25px;" @click="useStore().musicPlaying = !useStore().musicPlaying"
                 :class="playing ? 'bi bi-pause-fill' : 'bi bi-play-fill'"></i>
         </div>
         <div id="songs" style="display: none;">
