@@ -5,6 +5,8 @@ import { computed, ref } from 'vue'
 // force the player to play
 useStore().musicPlaying = true;
 
+const emit = defineEmits(['rolesAssigned'])
+
 const errors = ref([])
 
 const playersData = computed(() => useStore().playersData)
@@ -41,7 +43,7 @@ function validateRoles() {
     }
 
     if (valid) {
-        console.log('valid')
+        emit('rolesAssigned')
     }
 }
 </script>
