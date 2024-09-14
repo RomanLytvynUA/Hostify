@@ -31,7 +31,7 @@ const sheriff = ref(playersData.value.find((player) => player.role === 'Sheriff'
                 table.</p>
             <Timer time="00:30" />
             <br>
-            <button class="btn btn-light" @click="console.log('night is over')">The sheriff falls asleep</button>
+            <button class="btn btn-light" @click="$emit('nightEnded')">The sheriff falls asleep</button>
         </div>
     </div>
 </template>

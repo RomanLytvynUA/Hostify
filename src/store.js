@@ -8,20 +8,22 @@ export const useStore = defineStore('store', () => {
   { "number": 9, "name": "Name9", "role": "Mafia" }, { "number": 10, "name": "Name10", "role": "Civilian" }
   ]);
 
+  const firstPlayerToSpeak = ref(1)
+
   /*
   Game states:
   - rolesAssignmentPrep
   - rolesAssignment
   - firstNightPrep
   - firstNight
+  - dayPrep
   - day
-  - voting
   - night
   */
   const gameState = ref('rolesAssignmentPrep');
-  // const gameState = ref('firstNight');
+  // const gameState = ref('day');
 
   const musicPlaying = ref(false)
 
-  return { playersData, gameState, musicPlaying }
+  return { playersData, gameState, musicPlaying, firstPlayerToSpeak }
 })

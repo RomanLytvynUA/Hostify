@@ -47,6 +47,13 @@ watch(() => time.value, () => {
     percentage.value = getTimeValue(time.value) / getTimeValue(maxTime.value) * 100
 })
 
+function restart() {
+    counting.value = false
+    setTime(getTimeValue(maxTime.value))
+}
+
+defineExpose({ restart })
+
 </script>
 
 <template>
