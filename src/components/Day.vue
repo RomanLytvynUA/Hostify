@@ -11,7 +11,7 @@ const emit = defineEmits(['dayEnded'])
 Day states:
 - playersSpeeches
 - voting
-- testament
+- testaments
 **/
 const state = ref('playersSpeeches')
 
@@ -24,6 +24,7 @@ const timer = ref(null)
 const playersData = computed(() => useStore().playersData);
 const votingNominations = ref([])
 
+const testamentsQueue = ref([])
 const firstSpeechPlayer = useStore().firstPlayerToSpeak
 const lastSpeechPlayer = firstSpeechPlayer == 1 ? 10 : firstSpeechPlayer - 1
 const playerSpeaking = ref(playersData.value.find((player) => player.number == firstSpeechPlayer))
@@ -36,13 +37,26 @@ function skipSpeech() {
         // end day if only 1 player was nominated in the 1st cycle or there are no nominations
         if ((useStore().cycle == 1 && votingNominations.value.length === 1) || votingNominations.value.length === 0) {
             emit('dayEnded')
+        } else {
+            state.value = 'voting'
         }
-        state.value = 'voting'
     } else {
         playerSpeaking.value = playersData.value.find((player) => player.number == (playerSpeaking.value.number % 10) + 1);
         timer.value?.restart();
         votingNomination.value !== 'None' && votingNominations.value.push(votingNomination.value)
         votingNomination.value = 'None';
+    }
+}
+
+function skipTestament() {
+    const player = playersData.value.find(player => player.number === Number(testamentsQueue.value[0]))
+    player.dead = true
+    testamentsQueue.value.shift()
+
+    if (testamentsQueue.value.length) {
+        timer.value?.restart();
+    } else {
+        emit('dayEnded')
     }
 }
 
@@ -65,6 +79,7 @@ onMounted(() => {
 
 <template>
     <div class="container text-center">
+        <!-- Agenda -->
         <div v-if="state === 'playersSpeeches'">
             <p style="margin-bottom: 8px;">Give {{ playerSpeaking.name }} a
                 minute to speak.</p>
@@ -85,8 +100,22 @@ onMounted(() => {
 
             <button class="btn btn-light" @click="skipSpeech()">Continue</button>
         </div>
+
+        <!-- Voting -->
         <div v-if="state === 'voting'">
-            <Voting :nominations="votingNominations" />
+            <Voting 
+            @playersEliminated="(players) => {testamentsQueue = players; state='testaments'}" 
+            @revote="(players) => console.log('have to revote between', players)" 
+            :nominations="votingNominations" />
+        </div>
+
+        <!-- Testaments -->
+        <div v-if="state === 'testaments'">
+            <p style="margin-bottom: 8px;">{{ playersData.find(player => player.number === Number(testamentsQueue[0])).name }} has a minute for a testament.</p>
+            <Timer ref="timer" time="01:00" />
+            <br>
+
+            <button class="btn btn-light" @click="skipTestament()">Continue</button>
         </div>
     </div>
 </template>

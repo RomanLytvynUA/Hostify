@@ -46,5 +46,8 @@ const state = computed(() => useStore().gameState)
             <Day @dayEnded="useStore().gameState = ''" v-if="state === 'day'" />
         </div>
 
+        <div v-if="state === ''">
+            undifined state
+        </div>
     </div>
 </template>

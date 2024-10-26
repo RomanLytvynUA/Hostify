@@ -3,6 +3,7 @@ import { useStore } from '@/store.js'
 import { ref, computed } from 'vue'
 
 const props = defineProps(['nominations'])
+const emit = defineEmits(['playersEliminated', 'revote'])
 
 const voters = computed(() => useStore().playersData.filter((player) => player.dead !== true));
 const votingQueue = ref(props.nominations)
@@ -35,7 +36,15 @@ function nextNomination() {
             });
         }
     } else {
-        console.log('Voting results: ', votes.value)
+        const mostVotes = Math.max(...Object.values(votes.value))
+        const winners = Object.keys(votes.value).filter(player => votes.value[player] === mostVotes)
+        
+        if (winners.length > 1 && false) {
+            // request a revoting if some players have the same amount of votes
+            emit('revote', winners)
+        } else {
+            emit('playersEliminated', winners)
+        }
     }
 }
 
