@@ -1,6 +1,6 @@
 <script setup>
 import { useStore } from '@/store.js'
-import { computed, ref, onMounted, watch } from 'vue'
+import { computed, nextTick, ref, onMounted, watch } from 'vue'
 
 import Timer from './Timer.vue'
 import Voting from './Voting.vue'
@@ -9,9 +9,10 @@ const emit = defineEmits(['dayEnded'])
 
 /**
 Day states:
+- testaments
 - playersSpeeches
 - voting
-- testaments
+- defenceSpeeches
 **/
 const state = ref('playersSpeeches')
 
@@ -20,11 +21,11 @@ useStore().cycle += 1;
 
 const votingNomination = ref('None')
 const timer = ref(null)
+const voting = ref(null)
 
 const playersData = computed(() => useStore().playersData);
-const votingNominations = ref([])
 
-const testamentsQueue = ref([])
+const votingNominations = ref([])
 const firstSpeechPlayer = useStore().firstPlayerToSpeak
 const lastSpeechPlayer = firstSpeechPlayer == 1 ? 10 : firstSpeechPlayer - 1
 const playerSpeaking = ref(playersData.value.find((player) => player.number == firstSpeechPlayer))
@@ -48,15 +49,31 @@ function skipSpeech() {
     }
 }
 
+const testamentsQueue = ref([])
 function skipTestament() {
     const player = playersData.value.find(player => player.number === Number(testamentsQueue.value[0]))
     player.dead = true
     testamentsQueue.value.shift()
-
+    
     if (testamentsQueue.value.length) {
         timer.value?.restart();
     } else {
         emit('dayEnded')
+    }
+}
+
+const defenceSpeechesQueue = ref([])
+async function skipDefenceSpeech() {
+    const player = playersData.value.find(player => player.number === Number(defenceSpeechesQueue.value[0]))
+    votingNominations.value.push(player)
+    defenceSpeechesQueue.value.shift()
+    
+    if (defenceSpeechesQueue.value.length) {
+        timer.value?.restart();
+    } else {
+        state.value = 'voting'
+        await nextTick()
+        voting.value.type = 'revoting'
     }
 }
 
@@ -104,8 +121,10 @@ onMounted(() => {
         <!-- Voting -->
         <div v-if="state === 'voting'">
             <Voting 
-            @playersEliminated="(players) => {testamentsQueue = players; state='testaments'}" 
-            @revote="(players) => console.log('have to revote between', players)" 
+            ref="voting"
+            @noEliminations="() => $emit('dayEnded')"
+            @playersEliminated="(players) => {testamentsQueue = players; state='testaments'}"
+            @revote="(players) => {defenceSpeechesQueue = players; state='defenceSpeeches'; votingNominations = []}" 
             :nominations="votingNominations" />
         </div>
 
@@ -116,6 +135,15 @@ onMounted(() => {
             <br>
 
             <button class="btn btn-light" @click="skipTestament()">Continue</button>
+        </div>
+        
+        <!-- Defence Speeches -->
+        <div v-if="state === 'defenceSpeeches'">
+            <p style="margin-bottom: 8px;">{{ playersData.find(player => player.number === Number(defenceSpeechesQueue[0])).name }} has 30 seconds for a defence speech.</p>
+            <Timer ref="timer" time="00:30" />
+            <br>
+
+            <button class="btn btn-light" @click="skipDefenceSpeech()">Continue</button>
         </div>
     </div>
 </template>
