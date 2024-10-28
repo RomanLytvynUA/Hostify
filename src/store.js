@@ -10,6 +10,7 @@ export const useStore = defineStore('store', () => {
   const playersData = ref([])
 
   const firstPlayerToSpeak = ref(1)
+  const testamentsQueue = ref([])
 
   const cycle = ref(0)
 
@@ -21,12 +22,13 @@ export const useStore = defineStore('store', () => {
   - firstNight
   - dayPrep
   - day
+  - nightPrep
   - night
   */
   const gameState = ref('rolesAssignmentPrep');
-  // const gameState = ref('day');
+  // const gameState = ref('nightPrep');
 
   const musicPlaying = ref(false)
 
-  return { playersData, gameState, musicPlaying, firstPlayerToSpeak, cycle }
+  return { playersData, gameState, musicPlaying, firstPlayerToSpeak, cycle, testamentsQueue }
 })

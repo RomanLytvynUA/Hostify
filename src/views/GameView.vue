@@ -5,6 +5,7 @@ import { ref, computed } from 'vue'
 import RolesAssignment from '@/components/RolesAssignment.vue'
 import FirstNight from '@/components/FirstNight.vue'
 import Day from '@/components/Day.vue'
+import Night from '@/components/Night.vue'
 
 const state = computed(() => useStore().gameState)
 </script>
@@ -43,7 +44,18 @@ const state = computed(() => useStore().gameState)
             <button style="margin-top: 20px;" v-if="state === 'dayPrep'" class="btn btn-light btn-lg"
                 @click="useStore().gameState = 'day'">Start</button>
 
-            <Day @dayEnded="useStore().gameState = ''" v-if="state === 'day'" />
+            <Day @dayEnded="useStore().gameState = 'nightPrep'" v-if="state === 'day'" />
+        </div>
+        
+        <!-- NIGHT -->
+        <div v-if="state === 'night' || state === 'nightPrep'">
+            <h1>Night</h1>
+
+            <!-- prompt to start the night if state is nightPrep -->
+            <button style="margin-top: 20px;" v-if="state === 'nightPrep'" class="btn btn-light btn-lg"
+                @click="useStore().gameState = 'night'">Start</button>
+
+            <Night @nightEnded="useStore().gameState = 'dayPrep'" v-if="state === 'night'" />
         </div>
 
         <div v-if="state === ''">

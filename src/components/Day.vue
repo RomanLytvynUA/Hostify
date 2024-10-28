@@ -49,10 +49,11 @@ function skipSpeech() {
     }
 }
 
-const testamentsQueue = ref([])
+const testamentsQueue = ref(useStore().testamentsQueue)
 function skipTestament() {
     const player = playersData.value.find(player => player.number === Number(testamentsQueue.value[0]))
     player.dead = true
+    console.log(useStore().playersData)
     testamentsQueue.value.shift()
     
     if (testamentsQueue.value.length) {
