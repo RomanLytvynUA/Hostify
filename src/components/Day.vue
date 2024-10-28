@@ -33,6 +33,10 @@ const playerSpeaking = ref(playersData.value.find((player) => player.number == f
 useStore().firstPlayerToSpeak = (firstSpeechPlayer % 10) + 1;
 
 function skipSpeech() {
+    if (votingNomination.value !== 'None') {
+        votingNominations.value.push(votingNomination.value)
+        votingNomination.value = 'None';
+    }
     // start voting if all players have spoken
     if (lastSpeechPlayer === playerSpeaking.value.number) {
         // end day if only 1 player was nominated in the 1st cycle or there are no nominations
@@ -44,8 +48,6 @@ function skipSpeech() {
     } else {
         playerSpeaking.value = playersData.value.find((player) => player.number == (playerSpeaking.value.number % 10) + 1);
         timer.value?.restart();
-        votingNomination.value !== 'None' && votingNominations.value.push(votingNomination.value)
-        votingNomination.value = 'None';
     }
 }
 
