@@ -25,7 +25,6 @@ const evaluateMafiaChoices = () => {
     // add selected player to testaments queue if mafia voted equally
     if (new Set(Object.values(mafiaChoices.value)).size === 1) {
         useStore().testamentsQueue.push(Object.values(mafiaChoices.value)[0])
-        console.log(useStore().testamentsQueue)
     }
     state.value = 'donsCheck';
 }

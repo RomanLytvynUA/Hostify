@@ -14,7 +14,7 @@ Day states:
 - voting
 - defenceSpeeches
 **/
-const state = ref('playersSpeeches')
+const state = ref(useStore().testamentsQueue.length ? 'testaments' : 'playersSpeeches')
 
 useStore().musicPlaying = false;
 useStore().cycle += 1;
@@ -32,6 +32,7 @@ const playerSpeaking = ref(playersData.value.find((player) => player.number == f
 // next day a player next to the one that speaks first now will speak first
 useStore().firstPlayerToSpeak = (firstSpeechPlayer % 10) + 1;
 
+let agendaFinished = false;
 function skipSpeech() {
     if (votingNomination.value !== 'None') {
         votingNominations.value.push(votingNomination.value)
@@ -39,6 +40,7 @@ function skipSpeech() {
     }
     // start voting if all players have spoken
     if (lastSpeechPlayer === playerSpeaking.value.number) {
+        agendaFinished = true;
         // end day if only 1 player was nominated in the 1st cycle or there are no nominations
         if ((useStore().cycle == 1 && votingNominations.value.length === 1) || votingNominations.value.length === 0) {
             emit('dayEnded')
@@ -55,13 +57,16 @@ const testamentsQueue = ref(useStore().testamentsQueue)
 function skipTestament() {
     const player = playersData.value.find(player => player.number === Number(testamentsQueue.value[0]))
     player.dead = true
-    console.log(useStore().playersData)
     testamentsQueue.value.shift()
     
     if (testamentsQueue.value.length) {
         timer.value?.restart();
     } else {
-        emit('dayEnded')
+        if (agendaFinished) {
+            emit('dayEnded')
+        } else {
+            state.value = 'playersSpeeches'
+        }
     }
 }
 
@@ -81,14 +86,14 @@ async function skipDefenceSpeech() {
 }
 
 // make sure dead players don't get to speak
-watch(() => playerSpeaking.value, () => {
+watch([() => playerSpeaking.value, () => playersData.value], () => {
     if (playerSpeaking.value.dead) {
         skipSpeech()
     }
-}, { immediate: true })
+}, { immediate: true, deep: true })
 
-// set mandatory players properties if missing
 onMounted(() => {
+    // set mandatory players properties if missing
     playersData.value.forEach(player => {
         if (!('dead' in player)) {
             player.dead = false
