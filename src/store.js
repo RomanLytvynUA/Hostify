@@ -8,6 +8,9 @@ export const useStore = defineStore('store', () => {
   // { "number": 9, "name": "Name9", "role": "Mafia" }, { "number": 10, "name": "Name10", "role": "Civilian" }
   // ]);
   const playersData = ref([])
+  const don = computed(() => playersData.value.find((player) => player.role === 'Don'))
+  const mafia = computed(() => playersData.value.filter((player) => player.role === 'Mafia'))
+  const sheriff = computed(() => playersData.value.find((player) => player.role === 'Sheriff'))
 
   const firstPlayerToSpeak = ref(1)
   const testamentsQueue = ref([])
@@ -24,11 +27,25 @@ export const useStore = defineStore('store', () => {
   - day
   - nightPrep
   - night
+  - end
   */
   const gameState = ref('rolesAssignmentPrep');
-  // const gameState = ref('nightPrep');
+  // const gameState = ref('end');
 
   const musicPlaying = ref(false)
 
-  return { playersData, gameState, musicPlaying, firstPlayerToSpeak, cycle, testamentsQueue }
+  function evaluateGame() {
+    const mafiaCount = playersData.value.filter((player) => ['Mafia', 'Don'].includes(player.role) && !player.dead).length
+    const civCount = playersData.value.filter((player) => ['Civilian', 'Sheriff'].includes(player.role) && !player.dead).length
+
+    if (mafiaCount >= civCount) {
+      gameState.value = 'end'
+      return 'mafiaWon'
+    } else if (mafiaCount === 0) {
+      gameState.value = 'end'
+      return 'civWon'
+    }
+  }
+
+  return { playersData, don, mafia, sheriff, gameState, musicPlaying, firstPlayerToSpeak, cycle, testamentsQueue, evaluateGame }
 })

@@ -62,6 +62,7 @@ function skipTestament() {
     if (testamentsQueue.value.length) {
         timer.value?.restart();
     } else {
+        useStore().evaluateGame()
         if (agendaFinished) {
             emit('dayEnded')
         } else {
