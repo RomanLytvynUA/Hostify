@@ -111,23 +111,22 @@ function validateSettings() {
         <h1>Game settings</h1>
         <!-- settings card -->
         <div style="margin-top: 20px;" class="d-flex flex-column justify-content-center">
-            <div
-                style="width: 95%; max-width: 1200px; border: 1px solid white; border-radius: 5px 5px 0 0; margin: auto;">
+            <div class="setup-card">
                 <!-- preset controls -->
-                <div style="width: 100%;" role="group">
+                <div style="width: 100%; border-bottom: 3px solid #555557;" role="group">
                     <button @click="downloadPreset()" style="width: 50%; border-radius: 3px 0 0 0;" type="button"
-                        class="btn btn-light">
+                        class="btn btn-dark">
                         Save this preset <i class="bi bi-file-earmark-arrow-down"></i>
                     </button>
                     <button @click="loadDataFromPreset()" style="width: 50%; border-radius: 0 3px 0 0;" type="button"
-                        class="btn btn-light">
+                        class="btn btn-dark">
                         <i class="bi bi-file-earmark-arrow-up"></i> Load a preset
                     </button>
                 </div>
                 <!-- general settings -->
                 <form id="settingsForm">
-                    <h3 style="margin-top: 16px; margin-bottom: 0;">General</h3>
-                    <hr>
+                    <h3 class="secondary-txt" style="margin-top: 16px; margin-bottom: 0;">General</h3>
+                    <hr class="setup-hr">
                     <div class="row text-start justify-content-center" style="margin: auto;">
                         <div class="col-auto mb-3">
                             <label class="form-label">Tournament name:</label>
@@ -147,11 +146,11 @@ function validateSettings() {
                         </div>
                     </div>
                     <!-- players settings -->
-                    <hr>
-                    <h3 style="margin-top: 0; margin-bottom: 0;">Players</h3>
-                    <hr>
+                    <hr class="setup-hr">
+                    <h3 class="secondary-txt" style="margin-top: 0; margin-bottom: 0;">Players</h3>
+                    <hr class="setup-hr">
                     <table class="table table-responsive" style="max-width: 1000px; margin: auto;">
-                        <thead>
+                        <thead class="setup-table">
                             <tr>
                                 <th scope="col" style="width: 10%;">#</th>
                                 <th scope="col" style="width: 70%;">Name</th>
@@ -159,7 +158,7 @@ function validateSettings() {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="player in playersData.sort((a, b) => a.number - b.number)">
+                            <tr class="setup-table" v-for="player in playersData.sort((a, b) => a.number - b.number)">
                                 <th>{{ player.number }}</th>
                                 <td><input v-model="player.name" style="max-width: 350px; margin: auto;"
                                         class="form-control form-control-sm" :placeholder="`Player #${player.number}`">
@@ -176,11 +175,11 @@ function validateSettings() {
                     </table>
                 </form>
                 <br>
+                <button style="width: 100%; max-width: 1200px; border-radius: 0 0 3px 3px; border-top: 3px solid #555557;" type="button"
+                    @click="validateSettings()" class="btn btn-dark">
+                    Start the game
+                </button>
             </div>
-            <button style="width: 95%; max-width: 1200px; border-radius: 0 0 5px 5px; margin: auto;" type="button"
-                @click="validateSettings()" class="btn btn-success">
-                Start the game
-            </button>
         </div>
         <br>
     </div>

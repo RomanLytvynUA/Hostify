@@ -107,7 +107,7 @@ onMounted(() => {
     <div class="container text-center">
         <!-- Agenda -->
         <div v-if="state === 'playersSpeeches'">
-            <p style="margin-bottom: 8px;">Give {{ playerSpeaking.name }} a
+            <p class="secondary-txt" style="margin-bottom: 8px;">Give {{ playerSpeaking.name }} a
                 minute to speak.</p>
             <div class="d-flex justify-content-center align-items-center mb-3">
                 <label class="me-2">Voting nomination:</label>
@@ -124,7 +124,7 @@ onMounted(() => {
             <Timer ref="timer" time="01:00" />
             <br>
 
-            <button class="btn btn-light" @click="skipSpeech()">Continue</button>
+            <button class="btn btn-dark" @click="skipSpeech()">Continue</button>
         </div>
 
         <!-- Voting -->
@@ -139,20 +139,20 @@ onMounted(() => {
 
         <!-- Testaments -->
         <div v-if="state === 'testaments'">
-            <p style="margin-bottom: 8px;">{{ playersData.find(player => player.number === Number(testamentsQueue[0])).name }} has a minute for a testament.</p>
+            <p class="secondary-txt" style="margin-bottom: 8px;">{{ playersData.find(player => player.number === Number(testamentsQueue[0])).name }} has a minute for a testament.</p>
             <Timer ref="timer" time="01:00" />
             <br>
 
-            <button class="btn btn-light" @click="skipTestament()">Continue</button>
+            <button class="btn btn-dark" @click="skipTestament()">Continue</button>
         </div>
         
         <!-- Defence Speeches -->
         <div v-if="state === 'defenceSpeeches'">
-            <p style="margin-bottom: 8px;">{{ playersData.find(player => player.number === Number(defenceSpeechesQueue[0])).name }} has 30 seconds for a defence speech.</p>
+            <p class="secondary-txt" style="margin-bottom: 8px;">{{ playersData.find(player => player.number === Number(defenceSpeechesQueue[0])).name }} has 30 seconds for a defence speech.</p>
             <Timer ref="timer" time="00:30" />
             <br>
 
-            <button class="btn btn-light" @click="skipDefenceSpeech()">Continue</button>
+            <button class="btn btn-dark" @click="skipDefenceSpeech()">Continue</button>
         </div>
     </div>
 </template>

@@ -1,0 +1,99 @@
+/* General Styles */
+body {
+    background: #3b3b3d !important;
+    color: white;
+}
+
+/* Text Styles */
+.secondary-txt {
+    color: #eaeaea;
+}
+
+/* Button Styles */
+.btn-primary {
+    border-color: #555557;
+    background-color: #555557 !important;
+    color: #eaeaea !important;
+}
+
+.btn-primary:hover,
+.btn-primary:active {
+    border-color: #777779;
+    background-color: #777779 !important;
+}
+
+.btn-dark {
+    border-color: #444446;
+    background-color: #444446 !important;
+    color: #eaeaea !important;
+}
+
+.btn-dark:hover,
+.btn-dark:active {
+    border-color: #555557;
+    background-color: #555557 !important;
+}
+
+/* Setup Staff Styles */
+.setup-card {
+    width: 95%;
+    max-width: 1200px;
+    border: 3px solid #555557;
+    border-radius: 7px;
+    margin: auto;
+}
+
+.setup-hr {
+    background-color: #555557;
+    height: 3px;
+    border: 0;
+}
+
+.setup-table {
+    border-color: #555557 !important;
+    border-bottom-width: 2px !important;
+}
+
+/* Alert Styles */
+.alert {
+    border-color: #444446;
+    background-color: #555557;
+    color: #eaeaea;
+    width: 50%;
+    min-width: 350px;
+    margin-bottom: 5px;
+    padding: 5px;
+}
+
+/* Table Styles */
+td,
+th,
+tr {
+    border-color: #555557 !important;
+    background-color: #3b3b3d !important;
+    color: #eaeaea !important;
+}
+
+/* Form Styles */
+label {
+    color: #eaeaea !important;
+}
+
+input,
+select {
+    background-color: #3b3b3d !important;
+    border-color: #b5b5b8 !important;
+    color: #eaeaea !important;
+}
+
+input:focus,
+select:focus {
+    box-shadow: none !important;
+    outline: 0 none !important;
+    border-color: #cccccc !important;
+}
+
+::placeholder {
+    opacity: 0.8 !important;
+    color: #b5b5b8 !important;
+}

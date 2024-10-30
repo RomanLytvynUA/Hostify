@@ -50,14 +50,16 @@ function validateRoles() {
 
 <template>
     <div class="d-flex flex-column align-items-center">
-        <p @click="console.log(errors)">Please, hand out the roles to the players while keeping the fields below in
+        <p class="secondary-txt" style="margin-bottom: 0;" @click="console.log(errors)">Please, hand out the roles to the players while keeping the fields below in
             accordance with the roles
             selected.</p>
-        <div v-for="error in errors" style="width: 50%; min-width: 350px; margin-bottom: 5px; padding: 5px;"
-            class="alert alert-danger">
-            {{ error }}
-        </div>
         <br>
+        <div v-if="errors.length" style="margin-bottom: 20px;">
+            <div v-for="error in errors"
+                class="alert">
+                {{ error }}
+            </div>
+        </div>
         <form id="rolesForm">
             <table class="mx-auto">
                 <tbody>
@@ -79,8 +81,7 @@ function validateRoles() {
                 </tbody>
             </table>
         </form>
-        <br>
-        <button class="btn btn-light" @click="validateRoles()">Done</button>
+        <button style="margin-top: 20px;" class="btn btn-primary" @click="validateRoles()">Done</button>
     </div>
 </template>
 

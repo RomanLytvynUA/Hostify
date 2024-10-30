@@ -84,14 +84,14 @@ function evaluateVotes() {
                 <tbody>
                     <tr v-for="player in voters" :style="alreadyVoted.includes(player.number) && 'opacity: 50%'" :key="player.number">
                         <td style="width: 50px;">
-                            <input
+                            <input :id="'voting'+player.number"
                             :data-player-number="player.number"
                             :disabled="alreadyVoted.includes(player.number)"
                             type="checkbox" 
                             @click="$event.target.checked ? currentCandidateVoters.push(player.number) : currentCandidateVoters.splice(currentCandidateVoters.indexOf(player.number), 1)" 
                             class="form-check-input">
                         </td>
-                        <td>#{{ player.number }} - {{ player.name }}</td>
+                        <td><label :for="'voting'+player.number">#{{ player.number }} - {{ player.name }}</label></td>
                     </tr>
                 </tbody>
             </table>
@@ -107,10 +107,11 @@ function evaluateVotes() {
                     <tr v-for="player in voters" :key="player.number">
                         <td style="width: 50px;">
                             <input
+                            :id="'voting'+player.number"
                             type="checkbox"  
                             class="form-check-input">
                         </td>
-                        <td>#{{ player.number }} - {{ player.name }}</td>
+                        <td><label :for="'voting'+player.number">#{{ player.number }} - {{ player.name }}</label></td>
                     </tr>
                 </tbody>
             </table>

@@ -35,7 +35,7 @@ const evaluateMafiaChoices = () => {
     <div class="container text-center">
         <!-- Shooting -->
         <div v-if="state === 'shooting'">
-            <p style="margin-bottom: 8px;">Please, mark the fields below in accordiance with the mafia decisions.</p>
+            <p class="secondary-txt" style="margin-bottom: 8px;">Please, mark the fields below in accordiance with the mafia decisions.</p>
             <div class="d-flex justify-content-center align-items-center mb-3">
                 <table class="mx-auto text-center">
                     <tbody>
@@ -54,13 +54,13 @@ const evaluateMafiaChoices = () => {
                     </tbody>
                 </table>
             </div>
-            <button class="btn btn-light" @click="evaluateMafiaChoices()">Continue</button>
+            <button class="btn btn-dark" @click="evaluateMafiaChoices()">Continue</button>
         </div>
         
         <!-- Don's Check -->
         <div v-if="state === 'donsCheck'">
             <div v-if="!don.dead" >
-                <p style="margin-bottom: 8px;">
+                <p class="secondary-txt" style="margin-bottom: 8px;">
                     Please, wake the player <b>#{{ don.number }} - {{ don.name }}</b> up and let him check for a sheriff.
                 </p>
                 <div class="d-flex justify-content-center align-items-center mb-3">
@@ -78,16 +78,16 @@ const evaluateMafiaChoices = () => {
                     </label>
                 </div>
             </div>
-            <p v-else style="margin-bottom: 8px;">
+            <p class="secondary-txt" v-else style="margin-bottom: 8px;">
                 Even though the Don is dead, please pretend to wake him up. 
             </p>
-            <button class="btn btn-light" @click="state = 'sheriffsCheck'">Continue</button>
+            <button class="btn btn-dark" @click="state = 'sheriffsCheck'">Continue</button>
         </div>
         
         <!-- Sheriff's Check -->
         <div v-if="state === 'sheriffsCheck'">
             <div v-if="!sheriff.dead" >
-                <p style="margin-bottom: 8px;">
+                <p class="secondary-txt" style="margin-bottom: 8px;">
                     Please, wake the player <b>#{{ sheriff.number }} - {{ sheriff.name }}</b> up and let him check for mafia.
                 </p>
                 <div class="d-flex justify-content-center align-items-center mb-3">
@@ -105,10 +105,10 @@ const evaluateMafiaChoices = () => {
                     </label>
                 </div>
             </div>
-            <p v-else style="margin-bottom: 8px;">
+            <p class="secondary-txt" v-else style="margin-bottom: 8px;">
                 Even though the sheriff is dead, please pretend to wake him up. 
             </p>
-            <button class="btn btn-light" @click="$emit('nightEnded')">Continue</button>
+            <button class="btn btn-dark" @click="$emit('nightEnded')">Continue</button>
         </div>
     </div>
 </template>
