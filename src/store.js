@@ -1,11 +1,12 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
+import { useRouter } from 'vue-router'
 
 export const useStore = defineStore('store', () => {
   // const playersData = ref([{ "number": 1, "name": "Name1", "role": "Civilian" }, { "number": 2, "name": "Name2", "role": "Mafia" },
   // { "number": 3, "name": "Name3", "role": "Civilian" }, { "number": 4, "name": "Name4", "role": "Sheriff" }, { "number": 5, "name": "Name5", "role": "Civilian" },
-  // { "number": 6, "name": "Name6", "role": "Don" }, { "number": 7, "name": "Name7", "role": "Civilian" }, { "number": 8, "name": "Name8", "role": "Civilian" },
-  // { "number": 9, "name": "Name9", "role": "Mafia" }, { "number": 10, "name": "Name10", "role": "Civilian" }
+  // { "number": 6, "name": "Name6", "role": "Don", 'dead': true }, { "number": 7, "name": "Name7", "role": "Civilian" }, { "number": 8, "name": "Name8", "role": "Civilian" },
+  // { "number": 9, "name": "Name9", "role": "Mafia", 'dead': true }, { "number": 10, "name": "Name10", "role": "Civilian" }
   // ]);
   const playersData = ref([])
   const don = computed(() => playersData.value.find((player) => player.role === 'Don'))
@@ -27,25 +28,32 @@ export const useStore = defineStore('store', () => {
   - day
   - nightPrep
   - night
-  - end
   */
+  // const gameState = ref('night');
   const gameState = ref('rolesAssignmentPrep');
-  // const gameState = ref('end');
 
   const musicPlaying = ref(false)
 
+  const router = useRouter()
+  const currentRoute = computed(() => router.currentRoute.value.name)
   function evaluateGame() {
     const mafiaCount = playersData.value.filter((player) => ['Mafia', 'Don'].includes(player.role) && !player.dead).length
     const civCount = playersData.value.filter((player) => ['Civilian', 'Sheriff'].includes(player.role) && !player.dead).length
 
     if (mafiaCount >= civCount) {
-      gameState.value = 'end'
+      if (currentRoute !== 'results') {
+        router.push('/results');
+        gameState.value = 'rolesAssignmentPrep'
+      }
       return 'mafiaWon'
     } else if (mafiaCount === 0) {
-      gameState.value = 'end'
+      if (currentRoute !== 'results') {
+        router.push('/results');
+        gameState.value = 'rolesAssignmentPrep'
+      }
       return 'civWon'
     }
   }
 
-  return { playersData, don, mafia, sheriff, gameState, musicPlaying, firstPlayerToSpeak, cycle, testamentsQueue, evaluateGame }
+  return { playersData, don, mafia, sheriff, gameState, musicPlaying, firstPlayerToSpeak, cycle, testamentsQueue, currentRoute, evaluateGame }
 })

@@ -1,10 +1,9 @@
 <script setup>
 import { computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { useStore } from '@/store';
 import Player from './Player.vue'
 
-const route = useRoute()
-const routeName = computed(() => route.name)
+const routeName = computed(() => useStore().currentRoute)
 </script>
 
 

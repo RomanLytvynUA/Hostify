@@ -6,7 +6,6 @@ import RolesAssignment from '@/components/RolesAssignment.vue'
 import FirstNight from '@/components/FirstNight.vue'
 import Day from '@/components/Day.vue'
 import Night from '@/components/Night.vue'
-import End from '@/components/End.vue'
 
 const state = computed(() => useStore().gameState)
 </script>
@@ -57,13 +56,6 @@ const state = computed(() => useStore().gameState)
                 @click="useStore().gameState = 'night'">Start</button>
 
             <Night @nightEnded="useStore().gameState = 'dayPrep'" v-if="state === 'night'" />
-        </div>
-        
-        <!-- END -->
-        <div v-if="state === 'end'">
-            <h1>The Game Has Finished!</h1>
-
-            <End />
         </div>
 
         <div v-if="state === ''">
