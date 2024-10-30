@@ -46,7 +46,8 @@ body {
 .setup-hr {
     background-color: #555557;
     height: 3px;
-    border: 0;
+    border-color: #555557;
+    opacity: 1;
 }
 
 .setup-table {
