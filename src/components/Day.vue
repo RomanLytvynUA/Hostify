@@ -11,6 +11,7 @@ const emit = defineEmits(['dayEnded'])
 Day states:
 - testaments
 - playersSpeeches
+- votingNomination // for muted players
 - voting
 - defenceSpeeches
 **/
@@ -48,8 +49,12 @@ function skipSpeech() {
             state.value = 'voting'
         }
     } else {
+        state.value = 'playersSpeeches';
         playerSpeaking.value = playersData.value.find((player) => player.number == (playerSpeaking.value.number % 10) + 1);
         timer.value?.restart();
+        if (playerSpeaking.value.skipNextSpeech) {
+            state.value = 'votingNomination'
+        }
     }
 }
 
@@ -125,6 +130,25 @@ onMounted(() => {
             <br>
 
             <button class="btn btn-dark" @click="skipSpeech()">Continue</button>
+        </div>
+        
+        <!-- Voting nomination -->
+        <div v-if="state === 'votingNomination'">
+            <p class="secondary-txt" style="margin-bottom: 8px;">Please, let {{ playerSpeaking.name }} nominate a player for voting. The player is muted for this round.</p>
+            <div class="d-flex justify-content-center align-items-center mb-3">
+                <label class="me-2">Voting nomination:</label>
+                <select v-model="votingNomination" class="form-select form-select-sm w-auto">
+                    <option>None</option>
+                    <option v-for="player in playersData" :value="player"
+                        :disabled="player.dead || votingNominations.includes(player)">#{{ player.number }} -
+                        {{ player.name
+                        }}
+                    </option>
+                </select>
+            </div>
+            <br>
+
+            <button class="btn btn-dark" @click="playerSpeaking.skipNextSpeech = false; skipSpeech()">Continue</button>
         </div>
 
         <!-- Voting -->

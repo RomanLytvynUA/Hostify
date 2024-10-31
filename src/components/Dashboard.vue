@@ -28,6 +28,9 @@ function applyChanges() {
     useStore().playersData = playersData.value;
 
     useStore().playersData.forEach((player) => {
+        if (player.fouls === 3) {
+            player.skipNextSpeech = true;
+        }
         if (player.fouls === 4) {
             player.expelled = true;
         }
