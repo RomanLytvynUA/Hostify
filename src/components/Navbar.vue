@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import { useStore } from '@/store';
 import Player from './Player.vue'
+import Dashboard from './Dashboard.vue'
 
 const routeName = computed(() => useStore().currentRoute)
 </script>
@@ -15,12 +16,7 @@ const routeName = computed(() => useStore().currentRoute)
                 {{ routeName == 'home' ? '' : 'Hostify' }}
             </RouterLink>
             <Player style="margin-left: 10px;" v-if="routeName == 'game'" />
+            <Dashboard v-if="routeName == 'game'" />
         </div>
     </nav>
 </template>
-
-<!-- <style scoped>
-nav {
-    background-color: #333334 !important;
-}
-</style> -->

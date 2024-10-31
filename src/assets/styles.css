@@ -9,6 +9,17 @@ body {
     color: #eaeaea;
 }
 
+/* Modal */
+.modal-content {
+    background: #3b3b3d !important;
+    border-color: #444446 !important;
+}
+
+.modal-header,
+.modal-footer {
+    border-color: #444446 !important;
+}
+
 /* Button Styles */
 .btn-primary {
     border-color: #555557;

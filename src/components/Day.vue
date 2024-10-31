@@ -87,8 +87,8 @@ async function skipDefenceSpeech() {
 }
 
 // make sure dead players don't get to speak
-watch([() => playerSpeaking.value, () => playersData.value], () => {
-    if (playerSpeaking.value.dead) {
+watch([() => playerSpeaking.value, () => playersData.value], async () => {
+    if ((playersData.value.find((player) => player.number == playerSpeaking.value.number)).dead) {
         skipSpeech()
     }
 }, { immediate: true, deep: true })
