@@ -9,6 +9,7 @@ Night states:
 - shooting
 - donsCheck
 - sheriffsCheck
+- bestGuess
 **/
 const state = ref('shooting')
 
@@ -20,11 +21,19 @@ const donCheckRole = ref('')
 const sheriff = computed(() => playersData.value.find((player) => player.role === 'Sheriff'))
 const sheriffCheckRole = ref('')
 
+const bestGuessPlayer = ref(null)
+
 const mafiaChoices = ref({})
 const evaluateMafiaChoices = () => {
     // add selected player to testaments queue if mafia voted equally
     if (new Set(Object.values(mafiaChoices.value)).size === 1) {
         useStore().testamentsQueue.push(Object.values(mafiaChoices.value)[0])
+
+        // best guess right is only granted to the player killed in the 1st cycle
+        if (useStore().cycle == 1) {
+            bestGuessPlayer.value = Object.values(mafiaChoices.value)[0]
+            console.log()
+        }
     }
     state.value = 'donsCheck';
 }
@@ -108,6 +117,36 @@ const evaluateMafiaChoices = () => {
             <p class="secondary-txt" v-else style="margin-bottom: 8px;">
                 Even though the sheriff is dead, please pretend to wake him up. 
             </p>
+            <button class="btn btn-dark" @click="bestGuessPlayer ? state = 'bestGuess' : $emit('nightEnded')">Continue</button>
+        </div>
+        
+        <!-- Best Guess -->
+        <div v-if="state === 'bestGuess'">
+            <p class="secondary-txt" style="margin-bottom: 8px;">
+                Please, let player <b>#{{ sheriff.number }} - {{ sheriff.name }}</b> make his best guess.
+            </p>
+            <div class="row justify-content-center mb-3">
+                <div class="col-auto">
+                    <select class="form-select form-select-sm">
+                        <option hidden></option>
+                        <option v-for="player in playersData" :value="player.role">#{{ player.number }} - {{ player.name }}</option>
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <select class="form-select form-select-sm">
+                        <option hidden></option>
+                        <option v-for="player in playersData" :value="player.role">#{{ player.number }} - {{ player.name }}</option>
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <select class="form-select form-select-sm">
+                        <option hidden></option>
+                        <option v-for="player in playersData" :value="player.role">#{{ player.number }} - {{ player.name }}</option>
+                    </select>
+                </div>
+            </div>
+
+
             <button class="btn btn-dark" @click="$emit('nightEnded')">Continue</button>
         </div>
     </div>
