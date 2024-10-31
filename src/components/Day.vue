@@ -42,12 +42,7 @@ function skipSpeech() {
     // start voting if all players have spoken
     if (lastSpeechPlayer === playerSpeaking.value.number) {
         agendaFinished = true;
-        // end day if only 1 player was nominated in the 1st cycle or there are no nominations
-        if ((useStore().cycle == 1 && votingNominations.value.length === 1) || votingNominations.value.length === 0) {
-            emit('dayEnded')
-        } else {
-            state.value = 'voting'
-        }
+        state.value = 'voting';
     } else {
         state.value = 'playersSpeeches';
         playerSpeaking.value = playersData.value.find((player) => player.number == (playerSpeaking.value.number % 10) + 1);
@@ -97,6 +92,20 @@ watch([() => playerSpeaking.value, () => playersData.value], async () => {
         skipSpeech()
     }
 }, { immediate: true, deep: true })
+
+watch([() => useStore().votingsToSkip, () => state.value], () => {
+    if (state.value == 'voting' && 
+        (useStore().votingsToSkip > 0 || votingNominations.value.length === 0) || (useStore().cycle == 1 && votingNominations.value.length === 1)
+    ) {
+        // skip voting if forced by votingsToSkip OR there are no nominations OR it's the first cycle and there is a single nominee
+        emit('dayEnded')
+
+        // decrease votingsToSkip count 
+        if (useStore().votingsToSkip > 0) {
+            useStore().votingsToSkip = useStore().votingsToSkip - 1
+        }
+    }
+})
 
 onMounted(() => {
     // set mandatory players properties if missing

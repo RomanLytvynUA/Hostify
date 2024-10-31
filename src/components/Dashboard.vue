@@ -35,6 +35,7 @@ function applyChanges() {
             player.expelled = true;
         }
         if (player.expelled) {
+            useStore().votingsToSkip < 2 ? useStore().votingsToSkip += 1 : {}
             player.dead = true;
         }
     })
