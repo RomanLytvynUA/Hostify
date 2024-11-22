@@ -21,8 +21,11 @@ const state = computed(() => useStore().gameState)
             <button style="margin-top: 20px;" v-if="state === 'rolesAssignmentPrep'" class="btn btn-primary btn-lg"
                 @click="useStore().gameState = 'rolesAssignment'">Start</button>
 
-            <RolesAssignment @rolesAssigned="useStore().gameState = 'firstNightPrep'"
-                v-if="state === 'rolesAssignment'" />
+            <RolesAssignment @rolesAssigned="() => {
+                useStore().gameState = 'firstNightPrep'
+                // evaluate game just in case if too many players vere expelled during roles assignment
+                useStore().evaluateGame()
+            }" v-if="state === 'rolesAssignment'" />
         </div>
 
         <!-- FIRST NIGHT -->

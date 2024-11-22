@@ -3,7 +3,6 @@ import ConfettiExplosion from "vue-confetti-explosion";
 import { useStore } from '@/store.js'
 import { computed, nextTick, ref, onMounted, watch } from 'vue'
 
-const playersData = computed(() => useStore().playersData);
 const result = ref(useStore().evaluateGame());
 
 // confetti overflow workaround

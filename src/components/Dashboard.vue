@@ -8,7 +8,7 @@ const playersData = ref(JSON.parse(JSON.stringify(useStore().playersData)));
 onMounted(() => {
     reset();
     // reset data on modal close
-    document.getElementById('dashboardModal').addEventListener('hidden.bs.modal', function () {
+    document.getElementById('dashboardModal').addEventListener('show.bs.modal', function () {
         reset();
     });
 })
