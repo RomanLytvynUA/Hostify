@@ -21,6 +21,12 @@ body {
 }
 
 /* Button Styles */
+button:focus {
+    box-shadow: none !important;
+    outline: 0 none !important;
+    border-color: #444446 !important;
+}
+
 .btn-primary {
     border-color: #555557;
     background-color: #555557 !important;
