@@ -1,5 +1,6 @@
 <script setup>
 import { useStore } from '@/store.js'
+import { useGameLog } from '@/log.js'
 import { computed, ref } from 'vue'
 
 // force the player to play
@@ -43,6 +44,7 @@ function validateRoles() {
     }
 
     if (valid) {
+        useGameLog().generatePlayersList(playersData.value)
         emit('rolesAssigned')
     }
 }

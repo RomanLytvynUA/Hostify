@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router';
 import { useStore } from "@/store.js"
+import { useGameLog } from "@/log.js"
 
 const router = useRouter()
 
@@ -100,6 +101,7 @@ function validateSettings() {
         }
     }
     if (valid) {
+        useGameLog().generateLogHeader(tournamentName.value, game.value, stage.value, date.value)
         useStore().playersData = playersData.value
         router.push('/game')
     }
