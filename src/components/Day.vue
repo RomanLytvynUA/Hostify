@@ -1,5 +1,6 @@
 <script setup>
 import { useStore } from '@/store.js'
+import { useGameLog } from '@/log.js'
 import { computed, nextTick, ref, onMounted, watch } from 'vue'
 
 import Timer from './Timer.vue'
@@ -19,6 +20,7 @@ const state = ref(useStore().testamentsQueue.length ? 'testaments' : 'playersSpe
 
 useStore().musicPlaying = false;
 useStore().cycle += 1;
+useGameLog().logPhase(`DAY ${useStore().cycle}`)
 
 const votingNomination = ref('None')
 const timer = ref(null)
@@ -30,6 +32,15 @@ const votingNominations = ref([])
 const firstSpeechPlayer = useStore().firstPlayerToSpeak
 const lastSpeechPlayer = firstSpeechPlayer == 1 ? 10 : firstSpeechPlayer - 1
 const playerSpeaking = ref(playersData.value.find((player) => player.number == firstSpeechPlayer))
+// log the first player speaking if there are no testaments
+if (state.value === 'playersSpeeches') {
+    if (!playerSpeaking.value.dead) {
+        useGameLog().logEvent(`${playerSpeaking.value.name} gives a speech.`)
+    }
+} else {
+    useGameLog().logEvent(`${playersData.value.find(player => player.number === Number(useStore().testamentsQueue[0])).name} leaves a testament.`)
+}
+
 // next day a player next to the one that speaks first now will speak first
 useStore().firstPlayerToSpeak = (firstSpeechPlayer % 10) + 1;
 
@@ -37,6 +48,7 @@ let agendaFinished = false;
 function skipSpeech() {
     if (votingNomination.value !== 'None') {
         votingNominations.value.push(votingNomination.value)
+        useGameLog().logEvent(`${playerSpeaking.value.name} nominates ${votingNomination.value.name} for voting.`)
         votingNomination.value = 'None';
     }
     // start voting if all players have spoken
@@ -46,9 +58,17 @@ function skipSpeech() {
     } else {
         state.value = 'playersSpeeches';
         playerSpeaking.value = playersData.value.find((player) => player.number == (playerSpeaking.value.number % 10) + 1);
+        
         timer.value?.restart();
+        if (!playerSpeaking.value.dead) {
+            useGameLog().logEvent(`${playerSpeaking.value.name} gives a speech.`)
+        }
+        
         if (playerSpeaking.value.skipNextSpeech) {
             state.value = 'votingNomination'
+            if (!playerSpeaking.value.dead) {
+                useGameLog().logEvent(`${playerSpeaking.value.name} is mute for this round.`)
+            }
         }
     }
 }
@@ -61,12 +81,17 @@ function skipTestament() {
     
     if (testamentsQueue.value.length) {
         timer.value?.restart();
+        console.log(useStore().testamentsQueue[0])
+        useGameLog().logEvent(`${playersData.value.find(player => player.number === Number(testamentsQueue.value[0])).name} leaves a testament.`)
     } else {
         useStore().evaluateGame()
         if (agendaFinished) {
             emit('dayEnded')
         } else {
             state.value = 'playersSpeeches'
+            if (!playerSpeaking.value.dead) {
+                useGameLog().logEvent(`${playerSpeaking.value.name} gives a speech.`)
+            }
         }
     }
 }
@@ -165,7 +190,11 @@ onMounted(() => {
             <Voting 
             ref="voting"
             @noEliminations="() => $emit('dayEnded')"
-            @playersEliminated="(players) => {testamentsQueue = players; state='testaments'}"
+            @playersEliminated="(players) => {
+                testamentsQueue = players; 
+                state='testaments'; 
+                useGameLog().logEvent(`${playersData.find(player => player.number === Number(players[0])).name} leaves a testament.`)
+            }"
             @revote="(players) => {defenceSpeechesQueue = players; state='defenceSpeeches'; votingNominations = []}" 
             :nominations="votingNominations" />
         </div>

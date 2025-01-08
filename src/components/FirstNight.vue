@@ -1,5 +1,6 @@
 <script setup>
 import { useStore } from '@/store.js'
+import { useGameLog } from '@/log.js'
 import { computed, ref } from 'vue'
 
 import Timer from './Timer.vue'
