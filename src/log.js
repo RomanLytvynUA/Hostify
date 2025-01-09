@@ -16,12 +16,12 @@ export const useGameLog = defineStore('log', () => {
         log.value += "\n\n"
         log.value += "---[PLAYERS]---\n"
         playersData.forEach((player) => {
-            log.value += `| #${player.number} ${player.name}: ${player.role} ${player.number !== 10 ? '\n' : ''}`
+            log.value += `| #${player.number} ${player.name}: ${player.role}\n`
         })
     }
 
     const logPhase = (phase) => {
-        log.value += "\n\n"
+        log.value += "\n"
         log.value += `---[${phase}]---\n`
     }
 

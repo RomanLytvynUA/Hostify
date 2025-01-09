@@ -1,5 +1,6 @@
 <script setup>
 import { useStore } from '@/store.js'
+import { useGameLog } from '@/log.js'
 import { ref, computed } from 'vue'
 
 /**
@@ -22,6 +23,13 @@ const currentCandidateVoters = ref([])
 const alreadyVoted = ref([])
 
 function nextNomination() {
+    const namesOfPlayersVoted = currentCandidateVoters.value.map((player) => voters.value.find((voter) => voter.number === player).name)
+    if (namesOfPlayersVoted.length > 0) {
+        useGameLog().logEvent(`${namesOfPlayersVoted.join(', ')} vote against ${currentCandidate.value.name}. (${currentCandidateVoters.value.length} votes)`)
+    } else {
+        useGameLog().logEvent(`No one votes against ${currentCandidate.value.name}. (0 votes)`)
+    }
+
     alreadyVoted.value = alreadyVoted.value.concat(currentCandidateVoters.value)
     currentCandidateVoters.value = []
 
@@ -40,6 +48,7 @@ function nextNomination() {
                 if (!alreadyVoted.value.includes(Number(checkbox.getAttribute('data-player-number')))) {
                     checkbox.checked = true;
                     checkbox.disabled = true;
+                    currentCandidateVoters.value.push(Number(checkbox.getAttribute('data-player-number')))
                 }
             });
         }
@@ -50,12 +59,24 @@ function nextNomination() {
 
 function evaluateVotes() {
     if (type.value == 'eliminateAll') {
+        const checkBoxes = [...document.querySelectorAll('#votingForm input[type="checkbox"]')]
         const requiredVotesNumber = Math.floor(voters.value.length / 2) + 1
-        const numberOfVotes = [...document.querySelectorAll('#votingForm input[type="checkbox"]')].filter(checkbox => checkbox.checked).length
-        
+        const numberOfVotes = checkBoxes.filter(checkbox => checkbox.checked).length
+
+        const namesOfPlayersVoted = checkBoxes.filter(checkbox => checkbox.checked).map(checkbox => checkbox.getAttribute('data-player-name'))
+        const namesOfPlayersAbstained = checkBoxes.filter(checkbox => !checkbox.checked).map(checkbox => checkbox.getAttribute('data-player-name'))
+        if (namesOfPlayersVoted.length > 0) {
+            useGameLog().logEvent(`${namesOfPlayersVoted.join(', ')} vote to eliminate all players. (${namesOfPlayersVoted.length} votes)`)
+        }
+        if (namesOfPlayersAbstained.length > 0) {
+            useGameLog().logEvent(`${namesOfPlayersAbstained.join(', ')} abstain from the voting. (${namesOfPlayersAbstained.length} votes)`)
+        }
+
         if (numberOfVotes >= requiredVotesNumber) {
+            useGameLog().logEvent(`Players ${props.nominations.map((player) => player.name).join(', ')} are eliminated.`)
             emit('playersEliminated', props.nominations.map((player) => player.number))      
         } else {
+            useGameLog().logEvent(`The players failed to pass the vote.`)
             emit('noEliminations')      
         }
 
@@ -65,11 +86,17 @@ function evaluateVotes() {
 
         if (winners.length > 1) {
             if (type.value == 'normal') {
+                const namesOfTiePlayers = voters.value.filter((player) => winners.includes(String(player.number))).map((player) => player.name)
+                useGameLog().logEvent(`${namesOfTiePlayers.join(', ')} got equal number of votes.`)
                 emit('revote', winners)
             } else if (type.value == 'revoting') {
+                const namesOfTiePlayers = voters.value.filter((player) => winners.includes(String(player.number))).map((player) => player.name)
+                useGameLog().logEvent(`${namesOfTiePlayers.join(', ')} got equal number of votes.`)
                 type.value = 'eliminateAll'
             }
         } else {
+            const nameOfEliminatedPlayer = voters.value.find((voter) => voter.number === Number(winners[0])).name
+            useGameLog().logEvent(`${nameOfEliminatedPlayer} is eliminated.`)
             emit('playersEliminated', winners)
         }
     }
@@ -86,6 +113,7 @@ function evaluateVotes() {
                         <td style="width: 50px;">
                             <input :id="'voting'+player.number"
                             :data-player-number="player.number"
+                            :data-player-name="player.name"
                             :disabled="alreadyVoted.includes(player.number)"
                             type="checkbox" 
                             @click="$event.target.checked ? currentCandidateVoters.push(player.number) : currentCandidateVoters.splice(currentCandidateVoters.indexOf(player.number), 1)" 
@@ -108,6 +136,7 @@ function evaluateVotes() {
                         <td style="width: 50px;">
                             <input
                             :id="'voting'+player.number"
+                            :data-player-name="player.name"
                             type="checkbox"  
                             class="form-check-input">
                         </td>

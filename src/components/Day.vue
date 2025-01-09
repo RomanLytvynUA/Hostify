@@ -81,7 +81,6 @@ function skipTestament() {
     
     if (testamentsQueue.value.length) {
         timer.value?.restart();
-        console.log(useStore().testamentsQueue[0])
         useGameLog().logEvent(`${playersData.value.find(player => player.number === Number(testamentsQueue.value[0])).name} leaves a testament.`)
     } else {
         useStore().evaluateGame()
@@ -97,13 +96,14 @@ function skipTestament() {
 }
 
 const defenceSpeechesQueue = ref([])
-async function skipDefenceSpeech() {
+async function skipDefenseSpeech() {
     const player = playersData.value.find(player => player.number === Number(defenceSpeechesQueue.value[0]))
     votingNominations.value.push(player)
     defenceSpeechesQueue.value.shift()
     
     if (defenceSpeechesQueue.value.length) {
         timer.value?.restart();
+        useGameLog().logEvent(`${playersData.value.find(player => player.number === Number(defenceSpeechesQueue.value[0])).name} gives a defense speech.`)
     } else {
         state.value = 'voting'
         await nextTick()
@@ -195,7 +195,12 @@ onMounted(() => {
                 state='testaments'; 
                 useGameLog().logEvent(`${playersData.find(player => player.number === Number(players[0])).name} leaves a testament.`)
             }"
-            @revote="(players) => {defenceSpeechesQueue = players; state='defenceSpeeches'; votingNominations = []}" 
+            @revote="(players) => {
+                defenceSpeechesQueue = players; 
+                state='defenceSpeeches'; 
+                votingNominations = [];
+                useGameLog().logEvent(`${playersData.find((player) => player.number === Number(defenceSpeechesQueue[0])).name} gives a defense speech.`)
+            }" 
             :nominations="votingNominations" />
         </div>
 
@@ -214,7 +219,7 @@ onMounted(() => {
             <Timer ref="timer" time="00:30" />
             <br>
 
-            <button class="btn btn-dark" @click="skipDefenceSpeech()">Continue</button>
+            <button class="btn btn-dark" @click="skipDefenseSpeech()">Continue</button>
         </div>
     </div>
 </template>
