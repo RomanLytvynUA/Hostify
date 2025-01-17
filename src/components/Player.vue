@@ -4,19 +4,19 @@ import { useStore } from '@/store.js'
 
 const songs = {
     'Standart': [
-        { name: '1975', path: '/music/standart/1975.mp3' },
-        { name: 'River Blues', path: '/music/standart/River Blues.mp3' },
-        { name: 'We Ride!', path: '/music/standart/We Ride!.mp3' },
+        { name: '1975', path: '/Hostify/music/standart/1975.mp3' },
+        { name: 'River Blues', path: '/Hostify/music/standart/River Blues.mp3' },
+        { name: 'We Ride!', path: '/Hostify/music/standart/We Ride!.mp3' },
     ],
     'Jazz': [
-        { name: 'Blue Mood', path: '/music/jazz/Blue Mood.mp3' },
-        { name: 'City Walk', path: '/music/jazz/City Walk.mp3' },
-        { name: 'The Moon Drops', path: '/music/jazz/The Moon Drops.mp3' },
+        { name: 'Blue Mood', path: '/Hostify/music/jazz/Blue Mood.mp3' },
+        { name: 'City Walk', path: '/Hostify/music/jazz/City Walk.mp3' },
+        { name: 'The Moon Drops', path: '/Hostify/music/jazz/The Moon Drops.mp3' },
     ],
     'Rock': [
-        { name: 'Here it Comes', path: '/music/rock/Here it Comes.mp3' },
-        { name: 'Break Your Lock and Key', path: '/music/rock/Break Your Lock and Key.mp3' },
-        { name: 'Buckeye Bonzai', path: '/music/rock/Buckeye Bonzai.mp3' },
+        { name: 'Here it Comes', path: '/Hostify/music/rock/Here it Comes.mp3' },
+        { name: 'Break Your Lock and Key', path: '/Hostify/music/rock/Break Your Lock and Key.mp3' },
+        { name: 'Buckeye Bonzai', path: '/Hostify/music/rock/Buckeye Bonzai.mp3' },
     ],
 }
 
