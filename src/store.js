@@ -1,12 +1,100 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { useRouter } from 'vue-router'
+import { useGameLog } from '@/log.js'
 
 export const useStore = defineStore('store', () => {
-  // const playersData = ref([{ "number": 1, "name": "Name1", "role": "Civilian" }, { "number": 2, "name": "Name2", "role": "Mafia" },
-  // { "number": 3, "name": "Name3", "role": "Civilian" }, { "number": 4, "name": "Name4", "role": "Sheriff" }, { "number": 5, "name": "Name5", "role": "Civilian" },
-  // { "number": 6, "name": "Name6", "role": "Don" }, { "number": 7, "name": "Name7", "role": "Civilian" }, { "number": 8, "name": "Name8", "role": "Civilian" },
-  // { "number": 9, "name": "Name9", "role": "Mafia", 'dead': false }, { "number": 10, "name": "Name10", "role": "Civilian" }
+  // const playersData = ref([
+  //   {
+  //     "number": 1,
+  //     "name": "Bob1",
+  //     "fouls": 0,
+  //     "expelled": false,
+  //     "dead": false,
+  //     "skipNextSpeech": false,
+  //     "role": "Sheriff"
+  //   },
+  //   {
+  //     "number": 2,
+  //     "name": "Bob2",
+  //     "fouls": 0,
+  //     "expelled": false,
+  //     "dead": false,
+  //     "skipNextSpeech": false,
+  //     "role": "Civilian"
+  //   },
+  //   {
+  //     "number": 3,
+  //     "name": "Bob3",
+  //     "fouls": 0,
+  //     "expelled": false,
+  //     "dead": false,
+  //     "skipNextSpeech": false,
+  //     "role": "Civilian"
+  //   },
+  //   {
+  //     "number": 4,
+  //     "name": "Bob4",
+  //     "fouls": 0,
+  //     "expelled": false,
+  //     "dead": false,
+  //     "skipNextSpeech": false,
+  //     "role": "Civilian"
+  //   },
+  //   {
+  //     "number": 5,
+  //     "name": "Bob5",
+  //     "fouls": 0,
+  //     "expelled": false,
+  //     "dead": false,
+  //     "skipNextSpeech": false,
+  //     "role": "Civilian"
+  //   },
+  //   {
+  //     "number": 6,
+  //     "name": "Bob6",
+  //     "fouls": 0,
+  //     "expelled": false,
+  //     "dead": false,
+  //     "skipNextSpeech": false,
+  //     "role": "Civilian"
+  //   },
+  //   {
+  //     "number": 7,
+  //     "name": "Bob7",
+  //     "fouls": 0,
+  //     "expelled": false,
+  //     "dead": false,
+  //     "skipNextSpeech": false,
+  //     "role": "Civilian"
+  //   },
+  //   {
+  //     "number": 8,
+  //     "name": "Bob8",
+  //     "fouls": 0,
+  //     "expelled": false,
+  //     "dead": false,
+  //     "skipNextSpeech": false,
+  //     "role": "Mafia"
+  //   },
+  //   {
+  //     "number": 9,
+  //     "name": "Bob9",
+  //     "fouls": 0,
+  //     "expelled": false,
+  //     "dead": false,
+  //     "skipNextSpeech": false,
+  //     "role": "Mafia"
+  //   },
+  //   {
+  //     "number": 10,
+  //     "name": "Bob10",
+  //     "fouls": 0,
+  //     "expelled": false,
+  //     "dead": false,
+  //     "skipNextSpeech": false,
+  //     "role": "Don"
+  //   }
   // ]);
   const playersData = ref([])
   const don = computed(() => playersData.value.find((player) => player.role === 'Don'))
@@ -30,7 +118,7 @@ export const useStore = defineStore('store', () => {
   - nightPrep
   - night
   */
-  // const gameState = ref('day');
+  // const gameState = ref('nightPrep');
   const gameState = ref('rolesAssignmentPrep');
 
   const musicPlaying = ref(false)
@@ -45,13 +133,17 @@ export const useStore = defineStore('store', () => {
       if (currentRoute !== 'results' && !['rolesAssignmentPrep', 'rolesAssignment'].includes(gameState.value)) {
         router.push('/results');
         gameState.value = 'rolesAssignmentPrep'
+        useGameLog().logPhase('MAFIA WON')
       }
+
       return 'mafiaWon'
     } else if (mafiaCount === 0) {
       if (currentRoute !== 'results' && !['rolesAssignmentPrep', 'rolesAssignment'].includes(gameState.value)) {
         router.push('/results');
         gameState.value = 'rolesAssignmentPrep'
+        useGameLog().logPhase('CIVILIANS WON')
       }
+
       return 'civWon'
     }
   }

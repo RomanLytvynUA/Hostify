@@ -11,16 +11,16 @@ const game = ref('')
 const stage = ref('')
 const date = ref(new Date().toISOString().split('T')[0])
 const playersData = ref([
-    { 'number': 1, "name": '' },
-    { 'number': 2, "name": '' },
-    { 'number': 3, "name": '' },
-    { 'number': 4, "name": '' },
-    { 'number': 5, "name": '' },
-    { 'number': 6, "name": '' },
-    { 'number': 7, "name": '' },
-    { 'number': 8, "name": '' },
-    { 'number': 9, "name": '' },
-    { 'number': 10, "name": '' },
+    { 'number': 1, "name": '', "fouls": 0, "expelled": false, "dead": false, "skipNextSpeech": false },
+    { 'number': 2, "name": '', "fouls": 0, "expelled": false, "dead": false, "skipNextSpeech": false },
+    { 'number': 3, "name": '', "fouls": 0, "expelled": false, "dead": false, "skipNextSpeech": false },
+    { 'number': 4, "name": '', "fouls": 0, "expelled": false, "dead": false, "skipNextSpeech": false },
+    { 'number': 5, "name": '', "fouls": 0, "expelled": false, "dead": false, "skipNextSpeech": false },
+    { 'number': 6, "name": '', "fouls": 0, "expelled": false, "dead": false, "skipNextSpeech": false },
+    { 'number': 7, "name": '', "fouls": 0, "expelled": false, "dead": false, "skipNextSpeech": false },
+    { 'number': 8, "name": '', "fouls": 0, "expelled": false, "dead": false, "skipNextSpeech": false },
+    { 'number': 9, "name": '', "fouls": 0, "expelled": false, "dead": false, "skipNextSpeech": false },
+    { 'number': 10, "name": '', "fouls": 0, "expelled": false, "dead": false, "skipNextSpeech": false },
 ])
 
 function downloadPreset() {
@@ -58,16 +58,16 @@ function loadDataFromPreset() {
                 stage.value = json.stage || ""
                 date.value = json.date || ""
                 playersData.value = json.players || [
-                    { 'number': 1, "name": '' },
-                    { 'number': 2, "name": '' },
-                    { 'number': 3, "name": '' },
-                    { 'number': 4, "name": '' },
-                    { 'number': 5, "name": '' },
-                    { 'number': 6, "name": '' },
-                    { 'number': 7, "name": '' },
-                    { 'number': 8, "name": '' },
-                    { 'number': 9, "name": '' },
-                    { 'number': 10, "name": '' },
+                    { 'number': 1, "name": '', "fouls": 0, "expelled": false, "dead": false, "skipNextSpeech": false },
+                    { 'number': 2, "name": '', "fouls": 0, "expelled": false, "dead": false, "skipNextSpeech": false },
+                    { 'number': 3, "name": '', "fouls": 0, "expelled": false, "dead": false, "skipNextSpeech": false },
+                    { 'number': 4, "name": '', "fouls": 0, "expelled": false, "dead": false, "skipNextSpeech": false },
+                    { 'number': 5, "name": '', "fouls": 0, "expelled": false, "dead": false, "skipNextSpeech": false },
+                    { 'number': 6, "name": '', "fouls": 0, "expelled": false, "dead": false, "skipNextSpeech": false },
+                    { 'number': 7, "name": '', "fouls": 0, "expelled": false, "dead": false, "skipNextSpeech": false },
+                    { 'number': 8, "name": '', "fouls": 0, "expelled": false, "dead": false, "skipNextSpeech": false },
+                    { 'number': 9, "name": '', "fouls": 0, "expelled": false, "dead": false, "skipNextSpeech": false },
+                    { 'number': 10, "name": '', "fouls": 0, "expelled": false, "dead": false, "skipNextSpeech": false },
                 ]
             };
             reader.readAsText(file)
@@ -177,8 +177,9 @@ function validateSettings() {
                     </table>
                 </form>
                 <br>
-                <button style="width: 100%; max-width: 1200px; border-radius: 0 0 3px 3px; border-top: 3px solid #555557;" type="button"
-                    @click="validateSettings()" class="btn btn-dark">
+                <button
+                    style="width: 100%; max-width: 1200px; border-radius: 0 0 3px 3px; border-top: 3px solid #555557;"
+                    type="button" @click="validateSettings()" class="btn btn-dark">
                     Start the game
                 </button>
             </div>
