@@ -20,7 +20,7 @@ const state = ref(useStore().testamentsQueue.length ? 'testaments' : 'playersSpe
 
 useStore().musicPlaying = false;
 useStore().cycle += 1;
-useGameLog().logPhase(`DAY ${useStore().cycle}`)
+useGameLog().logPhase(`DAY #${useStore().cycle}`)
 
 const votingNomination = ref('None')
 const timer = ref(null)
@@ -58,12 +58,12 @@ function skipSpeech() {
     } else {
         state.value = 'playersSpeeches';
         playerSpeaking.value = playersData.value.find((player) => player.number == (playerSpeaking.value.number % 10) + 1);
-        
+
         timer.value?.restart();
         if (!playerSpeaking.value.dead) {
             useGameLog().logEvent(`${playerSpeaking.value.name} gives a speech.`)
         }
-        
+
         if (playerSpeaking.value.skipNextSpeech) {
             state.value = 'votingNomination'
             if (!playerSpeaking.value.dead) {
@@ -78,7 +78,7 @@ function skipTestament() {
     const player = playersData.value.find(player => player.number === Number(testamentsQueue.value[0]))
     player.dead = true
     testamentsQueue.value.shift()
-    
+
     if (testamentsQueue.value.length) {
         timer.value?.restart();
         useGameLog().logEvent(`${playersData.value.find(player => player.number === Number(testamentsQueue.value[0])).name} leaves a testament.`)
@@ -100,7 +100,7 @@ async function skipDefenseSpeech() {
     const player = playersData.value.find(player => player.number === Number(defenceSpeechesQueue.value[0]))
     votingNominations.value.push(player)
     defenceSpeechesQueue.value.shift()
-    
+
     if (defenceSpeechesQueue.value.length) {
         timer.value?.restart();
         useGameLog().logEvent(`${playersData.value.find(player => player.number === Number(defenceSpeechesQueue.value[0])).name} gives a defense speech.`)
@@ -119,7 +119,7 @@ watch([() => playerSpeaking.value, () => playersData.value], async () => {
 }, { immediate: true, deep: true })
 
 watch([() => useStore().votingsToSkip, () => state.value], () => {
-    if (state.value == 'voting' && 
+    if (state.value == 'voting' &&
         (useStore().votingsToSkip > 0 || votingNominations.value.length === 0) || (useStore().cycle == 1 && votingNominations.value.length === 1)
     ) {
         // skip voting if forced by votingsToSkip OR there are no nominations OR it's the first cycle and there is a single nominee
@@ -165,10 +165,11 @@ onMounted(() => {
 
             <button class="btn btn-dark" @click="skipSpeech()">Continue</button>
         </div>
-        
+
         <!-- Voting nomination -->
         <div v-if="state === 'votingNomination'">
-            <p class="secondary-txt" style="margin-bottom: 8px;">Please, let {{ playerSpeaking.name }} nominate a player for voting. The player is muted for this round.</p>
+            <p class="secondary-txt" style="margin-bottom: 8px;">Please, let {{ playerSpeaking.name }} nominate a player
+                for voting. The player is muted for this round.</p>
             <div class="d-flex justify-content-center align-items-center mb-3">
                 <label class="me-2">Voting nomination:</label>
                 <select v-model="votingNomination" class="form-select form-select-sm w-auto">
@@ -187,35 +188,32 @@ onMounted(() => {
 
         <!-- Voting -->
         <div v-if="state === 'voting'">
-            <Voting 
-            ref="voting"
-            @noEliminations="() => $emit('dayEnded')"
-            @playersEliminated="(players) => {
-                testamentsQueue = players; 
-                state='testaments'; 
+            <Voting ref="voting" @noEliminations="() => $emit('dayEnded')" @playersEliminated="(players) => {
+                testamentsQueue = players;
+                state = 'testaments';
                 useGameLog().logEvent(`${playersData.find(player => player.number === Number(players[0])).name} leaves a testament.`)
-            }"
-            @revote="(players) => {
-                defenceSpeechesQueue = players; 
-                state='defenceSpeeches'; 
+            }" @revote="(players) => {
+                defenceSpeechesQueue = players;
+                state = 'defenceSpeeches';
                 votingNominations = [];
                 useGameLog().logEvent(`${playersData.find((player) => player.number === Number(defenceSpeechesQueue[0])).name} gives a defense speech.`)
-            }" 
-            :nominations="votingNominations" />
+            }" :nominations="votingNominations" />
         </div>
 
         <!-- Testaments -->
         <div v-if="state === 'testaments'">
-            <p class="secondary-txt" style="margin-bottom: 8px;">{{ playersData.find(player => player.number === Number(testamentsQueue[0])).name }} has a minute for a testament.</p>
+            <p class="secondary-txt" style="margin-bottom: 8px;">{{playersData.find(player => player.number ===
+                Number(testamentsQueue[0])).name }} has a minute for a testament.</p>
             <Timer ref="timer" time="01:00" />
             <br>
 
             <button class="btn btn-dark" @click="skipTestament()">Continue</button>
         </div>
-        
+
         <!-- Defence Speeches -->
         <div v-if="state === 'defenceSpeeches'">
-            <p class="secondary-txt" style="margin-bottom: 8px;">{{ playersData.find(player => player.number === Number(defenceSpeechesQueue[0])).name }} has 30 seconds for a defence speech.</p>
+            <p class="secondary-txt" style="margin-bottom: 8px;">{{playersData.find(player => player.number ===
+                Number(defenceSpeechesQueue[0])).name }} has 30 seconds for a defence speech.</p>
             <Timer ref="timer" time="00:30" />
             <br>
 
