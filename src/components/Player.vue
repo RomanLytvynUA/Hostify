@@ -3,11 +3,6 @@ import { ref, computed, watch } from 'vue'
 import { useStore } from '@/store.js'
 
 const songs = {
-    'Standart': [
-        { name: '1975', path: 'music/standart/1975.mp3' },
-        { name: 'River Blues', path: 'music/standart/River Blues.mp3' },
-        { name: 'We Ride!', path: 'music/standart/We Ride!.mp3' },
-    ],
     'Jazz': [
         { name: 'Blue Mood', path: 'music/jazz/Blue Mood.mp3' },
         { name: 'City Walk', path: 'music/jazz/City Walk.mp3' },
@@ -18,10 +13,15 @@ const songs = {
         { name: 'Break Your Lock and Key', path: 'music/rock/Break Your Lock and Key.mp3' },
         { name: 'Buckeye Bonzai', path: 'music/rock/Buckeye Bonzai.mp3' },
     ],
+    'Ukrainian Jazz': [
+        { name: 'Roses on the platform', path: 'music/uajaz/Roses on the platform.mp3' },
+        { name: 'Red rue', path: 'music/uajaz/Red rue.mp3' },
+        { name: 'Paint me the night', path: 'music/uajaz/Paint me the night.mp3' },
+    ],
 }
 
 const playing = computed(() => useStore().musicPlaying)
-const selectedSong = ref(songs.Standart[0].name)
+const selectedSong = ref(songs.Jazz[0].name)
 
 watch(() => playing.value, () => {
     const player = document.getElementById(selectedSong.value)
