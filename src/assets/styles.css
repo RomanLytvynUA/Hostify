@@ -51,6 +51,17 @@ button:focus {
     background-color: #555557 !important;
 }
 
+/* Dropdown Styles */
+.dropdown-menu {
+    background-color: #3b3b3d !important;
+    border-color: #555557 !important;
+    color: #eaeaea !important;
+}
+
+.dropdown-item:hover {
+    background-color: #444446 !important;
+}
+
 /* Setup Staff Styles */
 .setup-card {
     width: 95%;
