@@ -5,7 +5,9 @@ import { computed, nextTick, ref, onMounted, watch } from 'vue'
 
 import Timer from './Timer.vue'
 import Voting from './Voting.vue'
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n({ useScope: 'global' })
 const emit = defineEmits(['dayEnded'])
 
 /**
@@ -22,7 +24,7 @@ useStore().musicPlaying = false;
 useStore().cycle += 1;
 useGameLog().logPhase(`DAY #${useStore().cycle}`)
 
-const votingNomination = ref('None')
+const votingNomination = ref('')
 const timer = ref(null)
 const voting = ref(null)
 
@@ -46,10 +48,10 @@ useStore().firstPlayerToSpeak = (firstSpeechPlayer % 10) + 1;
 
 let agendaFinished = false;
 function skipSpeech() {
-    if (votingNomination.value !== 'None') {
+    if (votingNomination.value !== '') {
         votingNominations.value.push(votingNomination.value)
         useGameLog().logEvent(`${playerSpeaking.value.name} nominates ${votingNomination.value.name} for voting.`)
-        votingNomination.value = 'None';
+        votingNomination.value = '';
     }
     // start voting if all players have spoken
     if (lastSpeechPlayer === playerSpeaking.value.number) {
@@ -146,12 +148,12 @@ onMounted(() => {
     <div class="container text-center">
         <!-- Agenda -->
         <div v-if="state === 'playersSpeeches'">
-            <p class="secondary-txt" style="margin-bottom: 8px;">Give {{ playerSpeaking.name }} a
-                minute to speak.</p>
+            <p class="secondary-txt" style="margin-bottom: 8px;">{{ t("day.speechSubtitle").replace("PLAYER_NAME",
+                playerSpeaking.name) }}</p>
             <div class="d-flex justify-content-center align-items-center mb-3">
-                <label class="me-2">Voting nomination:</label>
+                <label class="me-2">{{ t("day.votingNomination") }}</label>
                 <select v-model="votingNomination" class="form-select form-select-sm w-auto">
-                    <option>None</option>
+                    <option></option>
                     <option v-for="player in playersData" :value="player"
                         :disabled="player.dead || votingNominations.includes(player)">#{{ player.number }} -
                         {{ player.name
@@ -163,17 +165,17 @@ onMounted(() => {
             <Timer ref="timer" time="01:00" />
             <br>
 
-            <button class="btn btn-dark" @click="skipSpeech()">Continue</button>
+            <button class="btn btn-dark" @click="skipSpeech()">{{ t("day.continueBtn") }}</button>
         </div>
 
         <!-- Voting nomination -->
         <div v-if="state === 'votingNomination'">
-            <p class="secondary-txt" style="margin-bottom: 8px;">Please, let {{ playerSpeaking.name }} nominate a player
-                for voting. The player is muted for this round.</p>
+            <p class="secondary-txt" style="margin-bottom: 8px;">{{ t("day.mutedPlayerSubtitle").replace("PLAYER_NAME",
+                playerSpeaking.name) }}</p>
             <div class="d-flex justify-content-center align-items-center mb-3">
-                <label class="me-2">Voting nomination:</label>
+                <label class="me-2">{{ t("day.votingNomination") }}</label>
                 <select v-model="votingNomination" class="form-select form-select-sm w-auto">
-                    <option>None</option>
+                    <option></option>
                     <option v-for="player in playersData" :value="player"
                         :disabled="player.dead || votingNominations.includes(player)">#{{ player.number }} -
                         {{ player.name
@@ -183,7 +185,8 @@ onMounted(() => {
             </div>
             <br>
 
-            <button class="btn btn-dark" @click="playerSpeaking.skipNextSpeech = false; skipSpeech()">Continue</button>
+            <button class="btn btn-dark" @click="playerSpeaking.skipNextSpeech = false; skipSpeech()">{{
+                t("day.continueBtn") }}</button>
         </div>
 
         <!-- Voting -->
@@ -202,22 +205,22 @@ onMounted(() => {
 
         <!-- Testaments -->
         <div v-if="state === 'testaments'">
-            <p class="secondary-txt" style="margin-bottom: 8px;">{{playersData.find(player => player.number ===
-                Number(testamentsQueue[0])).name }} has a minute for a testament.</p>
+            <p class="secondary-txt" style="margin-bottom: 8px;">{{t("day.testamentSubtitle").replace("PLAYER_NAME",
+                playersData.find(player => player.number === Number(testamentsQueue[0])).name)}}</p>
             <Timer ref="timer" time="01:00" />
             <br>
 
-            <button class="btn btn-dark" @click="skipTestament()">Continue</button>
+            <button class="btn btn-dark" @click="skipTestament()">{{ t("day.continueBtn") }}</button>
         </div>
 
         <!-- Defence Speeches -->
         <div v-if="state === 'defenceSpeeches'">
-            <p class="secondary-txt" style="margin-bottom: 8px;">{{playersData.find(player => player.number ===
-                Number(defenceSpeechesQueue[0])).name }} has 30 seconds for a defence speech.</p>
+            <p class="secondary-txt" style="margin-bottom: 8px;">{{t("day.defenceSpeechSubtitle").replace("PLAYER_NAME",
+                playersData.find(player => player.number === Number(defenceSpeechesQueue[0])).name)}}</p>
             <Timer ref="timer" time="00:30" />
             <br>
 
-            <button class="btn btn-dark" @click="skipDefenseSpeech()">Continue</button>
+            <button class="btn btn-dark" @click="skipDefenseSpeech()">{{ t("day.continueBtn") }}</button>
         </div>
     </div>
 </template>

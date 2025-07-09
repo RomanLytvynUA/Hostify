@@ -2,6 +2,8 @@
 import { useStore } from '@/store.js'
 import { useGameLog } from '@/log.js'
 import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n({ useScope: 'global' })
 
 /**
 Voting types:
@@ -10,7 +12,7 @@ Voting types:
 - eliminateAll
 **/
 const type = ref('normal')
-defineExpose({type})
+defineExpose({ type })
 const props = defineProps(['nominations'])
 const emit = defineEmits(['playersEliminated', 'revote', 'noEliminations'])
 
@@ -34,16 +36,16 @@ function nextNomination() {
     currentCandidateVoters.value = []
 
     votes.value[currentCandidate.value.number] = [...document.querySelectorAll('#votingForm input[type="checkbox"]')]
-    .filter(checkbox => checkbox.checked).length
+        .filter(checkbox => checkbox.checked).length
 
     // move to next candidate unless queue is empty
     if (votingQueue.value.length > 1) {
         votingQueue.value = votingQueue.value.slice(1)
         document.querySelectorAll('#votingForm input[type="checkbox"]').forEach(checkbox => checkbox.checked = false)
 
-        
+
         // force everyone to vote the candidate is last in queue 
-        if (currentCandidate.value.number === props.nominations[props.nominations.length-1].number) {
+        if (currentCandidate.value.number === props.nominations[props.nominations.length - 1].number) {
             document.querySelectorAll('#votingForm input[type="checkbox"]').forEach(checkbox => {
                 if (!alreadyVoted.value.includes(Number(checkbox.getAttribute('data-player-number')))) {
                     checkbox.checked = true;
@@ -74,10 +76,10 @@ function evaluateVotes() {
 
         if (numberOfVotes >= requiredVotesNumber) {
             useGameLog().logEvent(`Players ${props.nominations.map((player) => player.name).join(', ')} are eliminated.`)
-            emit('playersEliminated', props.nominations.map((player) => player.number))      
+            emit('playersEliminated', props.nominations.map((player) => player.number))
         } else {
             useGameLog().logEvent(`The players failed to pass the vote.`)
-            emit('noEliminations')      
+            emit('noEliminations')
         }
 
     } else {
@@ -105,47 +107,44 @@ function evaluateVotes() {
 </script>
 <template>
     <div v-if="type !== 'eliminateAll'">
-        <p>Please, mark all those in favor of voting player <b>#{{ currentCandidate.number }} - {{ currentCandidate.name }}</b> off.</p>
+        <p>{{ t("voting.subtitle").replace("PLAYER_NAME", `#${currentCandidate.number} - ${currentCandidate.name}`) }}
+        </p>
         <form id="votingForm">
             <table class="mx-auto">
                 <tbody>
-                    <tr v-for="player in voters" :style="alreadyVoted.includes(player.number) && 'opacity: 50%'" :key="player.number">
+                    <tr v-for="player in voters" :style="alreadyVoted.includes(player.number) && 'opacity: 50%'"
+                        :key="player.number">
                         <td style="width: 50px;">
-                            <input :id="'voting'+player.number"
-                            :data-player-number="player.number"
-                            :data-player-name="player.name"
-                            :disabled="alreadyVoted.includes(player.number)"
-                            type="checkbox" 
-                            @click="$event.target.checked ? currentCandidateVoters.push(player.number) : currentCandidateVoters.splice(currentCandidateVoters.indexOf(player.number), 1)" 
-                            class="form-check-input">
+                            <input :id="'voting' + player.number" :data-player-number="player.number"
+                                :data-player-name="player.name" :disabled="alreadyVoted.includes(player.number)"
+                                type="checkbox"
+                                @click="$event.target.checked ? currentCandidateVoters.push(player.number) : currentCandidateVoters.splice(currentCandidateVoters.indexOf(player.number), 1)"
+                                class="form-check-input">
                         </td>
-                        <td><label :for="'voting'+player.number">#{{ player.number }} - {{ player.name }}</label></td>
+                        <td><label :for="'voting' + player.number">#{{ player.number }} - {{ player.name }}</label></td>
                     </tr>
                 </tbody>
             </table>
         </form>
         <br>
-        <button class="btn btn-light" @click="nextNomination()">Continue</button>
+        <button class="btn btn-light" @click="nextNomination()">{{ t("voting.continueBtn") }}</button>
     </div>
     <div v-else>
-        <p>Please, mark all those in favor of voting all players off.</p>
+        <p>{{ t("voting.eliminateAllSubtitle") }}</p>
         <form id="votingForm">
             <table class="mx-auto">
                 <tbody>
                     <tr v-for="player in voters" :key="player.number">
                         <td style="width: 50px;">
-                            <input
-                            :id="'voting'+player.number"
-                            :data-player-name="player.name"
-                            type="checkbox"  
-                            class="form-check-input">
+                            <input :id="'voting' + player.number" :data-player-name="player.name" type="checkbox"
+                                class="form-check-input">
                         </td>
-                        <td><label :for="'voting'+player.number">#{{ player.number }} - {{ player.name }}</label></td>
+                        <td><label :for="'voting' + player.number">#{{ player.number }} - {{ player.name }}</label></td>
                     </tr>
                 </tbody>
             </table>
         </form>
         <br>
-        <button class="btn btn-light" @click="evaluateVotes()">Continue</button>
+        <button class="btn btn-light" @click="evaluateVotes()">{{ t("voting.continueBtn") }}</button>
     </div>
 </template>

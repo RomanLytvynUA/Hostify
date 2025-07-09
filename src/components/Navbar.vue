@@ -21,14 +21,14 @@ const setLocale = (localeName) => {
         <div class="container-fluid position-relative">
 
             <!-- Centered section -->
-            <ul class="navbar-nav position-absolute top-50 start-50 translate-middle d-flex align-items-center">
+            <div class="justify-content-center d-flex align-items-center" style="flex-grow: 1;">
                 <RouterLink style="color: white; margin: 0;" class="navbar-brand d-flex align-items-center" to="/">
                     <img src="../assets/logo.png" alt="logo" width="50" style="margin-right: 5px;">
                     {{ routeName == 'home' ? '' : 'Hostify' }}
                 </RouterLink>
                 <Player style="margin-left: 10px;" v-if="routeName == 'game'" />
                 <Dashboard v-if="routeName == 'game'" />
-            </ul>
+            </div>
 
             <!-- Right-aligned section -->
             <ul class="navbar-nav ms-auto d-flex align-items-center">

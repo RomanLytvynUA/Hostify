@@ -2,6 +2,9 @@
 import { useStore } from '@/store.js'
 import { useGameLog } from '@/log.js'
 import { computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n({ useScope: 'global' })
 
 // force the player to play
 useStore().musicPlaying = true;
@@ -31,15 +34,15 @@ function validateRoles() {
     playersData.value.map((player) => player.role).forEach(function (x) { roles[x] = (roles[x] || 0) + 1; });
 
     if (roles['Sheriff'] !== 1) {
-        errors.value.push('There must be 1 Sheriff role.');
+        errors.value.push(t('rolesAssignment.sheriffAlert'));
         valid = false
     }
     if (roles['Don'] !== 1) {
-        errors.value.push('There must be 1 Don role.')
+        errors.value.push(t('rolesAssignment.donAlert'))
         valid = false
     }
     if (roles['Mafia'] !== 2) {
-        errors.value.push('There must be 2 Mafia roles.')
+        errors.value.push(t('rolesAssignment.mafiaAlert'))
         valid = false
     }
 
@@ -52,13 +55,11 @@ function validateRoles() {
 
 <template>
     <div class="d-flex flex-column align-items-center">
-        <p class="secondary-txt" style="margin-bottom: 0;" @click="console.log(errors)">Please, hand out the roles to the players while keeping the fields below in
-            accordance with the roles
-            selected.</p>
+        <p class="secondary-txt" style="margin-bottom: 0;" @click="console.log(errors)">
+            {{ t('rolesAssignment.subtitle') }}</p>
         <br>
         <div v-if="errors.length" style="margin-bottom: 20px;">
-            <div v-for="error in errors"
-                class="alert">
+            <div v-for="error in errors" class="alert">
                 {{ error }}
             </div>
         </div>
@@ -73,17 +74,18 @@ function validateRoles() {
                                 @change="useStore().playersData.find((player1) => player1.number === player.number).role = $event.target.value"
                                 class="form-select form-select-sm mx-2" style="max-width: 100px;">
                                 <option hidden></option>
-                                <option>Civilian</option>
-                                <option>Mafia</option>
-                                <option>Don</option>
-                                <option>Sheriff</option>
+                                <option value="Civilian">{{ t('rolesAssignment.civilian') }}</option>
+                                <option value="Mafia">{{ t('rolesAssignment.mafia') }}</option>
+                                <option value="Don">{{ t('rolesAssignment.don') }}</option>
+                                <option value="Sheriff">{{ t('rolesAssignment.sheriff') }}</option>
                             </select>
                         </td>
                     </tr>
                 </tbody>
             </table>
         </form>
-        <button style="margin-top: 20px;" class="btn btn-primary" @click="validateRoles()">Done</button>
+        <button style="margin-top: 20px;" class="btn btn-primary" @click="validateRoles()">{{
+            t('rolesAssignment.doneBtn') }}</button>
     </div>
 </template>
 

@@ -2,6 +2,8 @@
 import { ref, computed, watch, onMounted } from 'vue'
 import { useStore } from '@/store.js'
 import { useGameLog } from '@/log.js'
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n({ useScope: 'global' })
 
 // make a copy of players data
 const playersData = ref(JSON.parse(JSON.stringify(useStore().playersData)));
@@ -58,7 +60,7 @@ function applyChanges() {
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Dashboard</h5>
+                    <h5 class="modal-title">{{ t('dashboard.title') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -66,9 +68,9 @@ function applyChanges() {
                         <thead class="setup-table">
                             <tr>
                                 <th scope="col" style="width: 10%;">#</th>
-                                <th scope="col" style="width: 50%;">Name</th>
-                                <th scope="col" style="width: 15%;">Fouls</th>
-                                <th scope="col" style="width: 25%;">Expel</th>
+                                <th scope="col" style="width: 50%;">{{ t('dashboard.name') }}</th>
+                                <th scope="col" style="width: 15%;">{{ t('dashboard.fouls') }}</th>
+                                <th scope="col" style="width: 25%;">{{ t('dashboard.expel') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -89,7 +91,7 @@ function applyChanges() {
                 </div>
                 <div class="modal-footer" style="padding: 5px;">
                     <button style="width: 100%;" type="button" class="btn btn-dark" data-bs-dismiss="modal"
-                        @click="applyChanges()">Authorize changes</button>
+                        @click="applyChanges()">{{ t('dashboard.authorizeBtn') }}</button>
                 </div>
             </div>
         </div>

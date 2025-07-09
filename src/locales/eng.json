@@ -3,5 +3,75 @@
     "home": {
         "subtitle": "Your host assistant for a professional mafia game",
         "setupBtn": "Set up a game"
+    },
+    "setup": {
+        "title": "Game settings",
+        "generalTitle": "General",
+        "tournamentName": "Tournament name:",
+        "game": "Game:",
+        "stage": "Stage:",
+        "date": "Date:",
+        "playersTitle": "Players",
+        "name": "Name",
+        "player": "Player",
+        "saveBtn": "Save this preset",
+        "loadBtn": "Load a preset",
+        "startBtn": "Start the game"
+    },
+    "rolesAssignment": {
+        "title": "Roles assignment",
+        "subtitle": "Please, hand out the roles to the players while keeping the fields below in accordance with the roles selected.",
+        "civilian": "Civilian",
+        "mafia": "Mafia",
+        "don": "Don",
+        "sheriff": "Sheriff",
+        "sheriffAlert": "There must be 1 Sheriff role.",
+        "donAlert": "There must be 1 Don role.",
+        "mafiaAlert": "There must be 2 Mafia roles.",
+        "startBtn": "Start",
+        "doneBtn": "Done"
+    },
+    "firstNight": {
+        "title": "Night",
+        "mafiaSubtitle": "Please, wake up the mafia (MAFIA_PLAYERS). They have a minute to negotiate.",
+        "sheriffSubtitle": "Please, wake up the sheriff (SHERIFF_NAME). The sheriff has 30 seconds to take a look at the table.",
+        "mafiaFallsAsleep": "Mafia falls asleep",
+        "sheriffFallsAsleep": "Sheriff falls asleep",
+        "startBtn": "Start"
+    },
+    "day": {
+        "title": "Day",
+        "speechSubtitle": "Give PLAYER_NAME a minute to speak.",
+        "mutedPlayerSubtitle": "Please, let PLAYER_NAME nominate a player for voting. The player is muted for this round.",
+        "testamentSubtitle": "PLAYER_NAME has a minute for a testament.",
+        "defenceSpeechSubtitle": "PLAYER_NAME has 30 seconds for a defence speech.",
+        "votingNomination": "Voting nomination:",
+        "continueBtn": "Continue",
+        "startBtn": "Start"
+    },
+    "voting": {
+        "subtitle": "Please, mark all those in favor of voting player PLAYER_NAME off.",
+        "eliminateAllSubtitle": "Please, mark all those in favor of voting all players off.",
+        "continueBtn": "Continue"
+    },
+    "night": {
+        "title": "Night",
+        "mafiaSubtitle": "Please, mark the fields below in accordiance with the mafia decisions.",
+        "donSubtitle": "Please, wake the player PLAYER_NAME up and let him check for a sheriff.",
+        "deadDonSubtitle": "Even though the Don is dead, please pretend to wake him up.",
+        "sheriffSubtitle": "Please, wake the player PLAYER_NAME up and let him check for mafia.",
+        "deadSheriffSubtitle": "Even though the Sheriff is dead, please pretend to wake him up.",
+        "bestGuessSubtitle": "Please, let player PLAYER_NAME make his best guess.",
+        "shoots": "shoots",
+        "check": "Check:",
+        "continueBtn": "Continue",
+        "startBtn": "Start"
+    },
+    "dashboard": {
+        "title": "Dashboard",
+        "name": "Name",
+        "fouls": "Fouls",
+        "expel": "Expel",
+        "authorizeBtn": "Authorize changes"
     }
 }

@@ -2,6 +2,9 @@
 import { useStore } from '@/store.js'
 import { useGameLog } from '@/log.js'
 import { computed, ref, onMounted, watch } from 'vue'
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n({ useScope: 'global' })
 
 const emit = defineEmits(['nightEnded'])
 
@@ -56,15 +59,14 @@ const evaluateMafiaChoices = () => {
     <div class="container text-center">
         <!-- Shooting -->
         <div v-if="state === 'shooting'">
-            <p class="secondary-txt" style="margin-bottom: 8px;">Please, mark the fields below in accordiance with the
-                mafia decisions.</p>
+            <p class="secondary-txt" style="margin-bottom: 8px;">{{ t("night.mafiaSubtitle") }}</p>
             <div class="d-flex justify-content-center align-items-center mb-3">
                 <table class="mx-auto text-center">
                     <tbody>
                         <tr v-for="mafia in playersData.filter((mafia) => !mafia.dead && (mafia.role === 'Mafia' || mafia.role === 'Don'))"
                             :key="mafia.number">
                             <td style="width: 150px;" class="p-2 text-end"><b>{{ mafia.name }}</b></td>
-                            <td style="width: 90px;" class="p-2">shoots</td>
+                            <td style="width: 90px;" class="p-2">{{ t("night.shoots") }}</td>
                             <td style="width: 150px;" class="p-2">
                                 <select @change="mafiaChoices[mafia.number] = $event.target.value"
                                     class="form-select form-select-sm mx-auto" style="margin: 0 !important;">
@@ -77,18 +79,17 @@ const evaluateMafiaChoices = () => {
                     </tbody>
                 </table>
             </div>
-            <button class="btn btn-dark" @click="evaluateMafiaChoices()">Continue</button>
+            <button class="btn btn-dark" @click="evaluateMafiaChoices()">{{ t("night.continueBtn") }}</button>
         </div>
 
         <!-- Don's Check -->
         <div v-if="state === 'donsCheck'">
             <div v-if="!don.dead">
                 <p class="secondary-txt" style="margin-bottom: 8px;">
-                    Please, wake the player <b>#{{ don.number }} - {{ don.name }}</b> up and let him check for a
-                    sheriff.
+                    {{ t("night.donSubtitle").replace("PLAYER_NAME", `#${don.number} - ${don.name}`) }}
                 </p>
                 <div class="d-flex justify-content-center align-items-center mb-3">
-                    <label class="me-2">Check:</label>
+                    <label class="me-2">{{ t("night.check") }}</label>
                     <select class="form-select form-select-sm w-auto" @change="donCheck = $event.target.value">
                         <option hidden></option>
                         <option v-for="player in playersData" :value="player.number">#{{ player.number }} -
@@ -104,25 +105,24 @@ const evaluateMafiaChoices = () => {
                 </div>
             </div>
             <p class="secondary-txt" v-else style="margin-bottom: 8px;">
-                Even though the Don is dead, please pretend to wake him up.
+                {{ t("night.deadDonSubtitle") }}
             </p>
             <button class="btn btn-dark" @click="state = 'sheriffsCheck';
             (() => {
                 const checkedPlayer = playersData.find(player => String(player.number) === donCheck);
                 const result = donCheck === String(sheriff?.number) ? 'POSITIVE' : 'NEGATIVE';
                 useGameLog().logEvent(`The Don checks #${donCheck} - ${checkedPlayer?.name}. ${result}`);
-            })()">Continue</button>
+            })()">{{ t("night.continueBtn") }}</button>
         </div>
 
         <!-- Sheriff's Check -->
         <div v-if="state === 'sheriffsCheck'">
             <div v-if="!sheriff.dead">
                 <p class="secondary-txt" style="margin-bottom: 8px;">
-                    Please, wake the player <b>#{{ sheriff.number }} - {{ sheriff.name }}</b> up and let him check for
-                    mafia.
+                    {{ t("night.sheriffSubtitle").replace("PLAYER_NAME", `#${sheriff.number} - ${sheriff.name}`) }}
                 </p>
                 <div class="d-flex justify-content-center align-items-center mb-3">
-                    <label class="me-2">Check:</label>
+                    <label class="me-2">{{ t("night.check") }}</label>
                     <select class="form-select form-select-sm w-auto" @change="sheriffCheck = $event.target.value">
                         <option hidden></option>
                         <option v-for="player in playersData" :value="player.number">#{{ player.number }} -
@@ -138,7 +138,7 @@ const evaluateMafiaChoices = () => {
                 </div>
             </div>
             <p class="secondary-txt" v-else style="margin-bottom: 8px;">
-                Even though the sheriff is dead, please pretend to wake him up.
+                {{ t("night.deadSheriffSubtitle") }}
             </p>
             <button class="btn btn-dark" @click="
                 () => {
@@ -152,14 +152,14 @@ const evaluateMafiaChoices = () => {
                         $emit('nightEnded');
                     }
                 }
-            ">Continue</button>
+            ">{{ t("night.continueBtn") }}</button>
         </div>
 
         <!-- Best Guess -->
         <div v-if="state === 'bestGuess'">
             <p class="secondary-txt" style="margin-bottom: 8px;">
-                Please, let player <b>#{{ bestGuessPlayer.number }} - {{ bestGuessPlayer.name }}</b> make his best
-                guess.
+                {{ t("night.sheriffSubtitle").replace("PLAYER_NAME", `#${bestGuessPlayer.number} -
+                ${bestGuessPlayer.name}`) }}
             </p>
             <div class="row justify-content-center mb-3">
                 <div class="col-auto" v-for="(guess, index) in bestGuess" :key="index">
@@ -167,7 +167,7 @@ const evaluateMafiaChoices = () => {
                         <option hidden></option>
                         <option v-for="player in playersData" :value="player.number">#{{ player.number }} - {{
                             player.name
-                            }}</option>
+                        }}</option>
                     </select>
                 </div>
             </div>
@@ -179,7 +179,7 @@ const evaluateMafiaChoices = () => {
                 useGameLog().logEvent(`${bestGuessPlayer.name}'s best guess: ${guessedPlayers.map(player => `#${player.number} - ${player.name}`).join(', ')}. (${guessedMafia.length}/3)`);
 
                 $emit('nightEnded')
-            })">Continue</button>
+            })">{{ t("night.continueBtn") }}</button>
         </div>
     </div>
 </template>

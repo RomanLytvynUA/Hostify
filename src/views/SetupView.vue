@@ -3,7 +3,9 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router';
 import { useStore } from "@/store.js"
 import { useGameLog } from "@/log.js"
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n({ useScope: 'global' })
 const router = useRouter()
 
 const tournamentName = ref('')
@@ -110,7 +112,7 @@ function validateSettings() {
 
 <template>
     <div class="container-fluid text-center">
-        <h1>Game settings</h1>
+        <h1>{{ t("setup.title") }}</h1>
         <!-- settings card -->
         <div style="margin-top: 20px;" class="d-flex flex-column justify-content-center">
             <div class="setup-card">
@@ -118,44 +120,46 @@ function validateSettings() {
                 <div style="width: 100%; border-bottom: 3px solid #555557;" role="group">
                     <button @click="downloadPreset()" style="width: 50%; border-radius: 3px 0 0 0;" type="button"
                         class="btn btn-dark">
-                        Save this preset <i class="bi bi-file-earmark-arrow-down"></i>
+                        {{ t("setup.saveBtn") }} <i class="bi bi-file-earmark-arrow-down"></i>
                     </button>
                     <button @click="loadDataFromPreset()" style="width: 50%; border-radius: 0 3px 0 0;" type="button"
                         class="btn btn-dark">
-                        <i class="bi bi-file-earmark-arrow-up"></i> Load a preset
+                        <i class="bi bi-file-earmark-arrow-up"></i> {{ t("setup.loadBtn") }}
                     </button>
                 </div>
                 <!-- general settings -->
                 <form id="settingsForm">
-                    <h3 class="secondary-txt" style="margin-top: 16px; margin-bottom: 0;">General</h3>
+                    <h3 class="secondary-txt" style="margin-top: 16px; margin-bottom: 0;">{{ t("setup.generalTitle") }}
+                    </h3>
                     <hr class="setup-hr">
                     <div class="row text-start justify-content-center" style="margin: auto;">
                         <div class="col-auto mb-3">
-                            <label class="form-label">Tournament name:</label>
+                            <label class="form-label">{{ t("setup.tournamentName") }}</label>
                             <input v-model="tournamentName" type="text" class="form-control">
                         </div>
                         <div class="col-auto mb-3">
-                            <label class="form-label">Game:</label>
+                            <label class="form-label">{{ t("setup.game") }}</label>
                             <input v-model="game" type="text" class="form-control">
                         </div>
                         <div class="col-auto mb-3">
-                            <label class="form-label">Stage:</label>
+                            <label class="form-label">{{ t("setup.stage") }}</label>
                             <input v-model="stage" type="text" class="form-control">
                         </div>
                         <div class="col-auto mb-3">
-                            <label class="form-label">Date:</label>
+                            <label class="form-label">{{ t("setup.date") }}</label>
                             <input v-model="date" type="date" class="form-control">
                         </div>
                     </div>
                     <!-- players settings -->
                     <hr class="setup-hr">
-                    <h3 class="secondary-txt" style="margin-top: 0; margin-bottom: 0;">Players</h3>
+                    <h3 class="secondary-txt" style="margin-top: 0; margin-bottom: 0;">{{ t("setup.playersTitle") }}
+                    </h3>
                     <hr class="setup-hr">
                     <table class="table table-responsive" style="max-width: 1000px; margin: auto;">
                         <thead class="setup-table">
                             <tr>
                                 <th scope="col" style="width: 10%;">#</th>
-                                <th scope="col" style="width: 70%;">Name</th>
+                                <th scope="col" style="width: 70%;">{{ t("setup.name") }}</th>
                                 <th scope="col" style="width: 20%;"></th>
                             </tr>
                         </thead>
@@ -163,7 +167,8 @@ function validateSettings() {
                             <tr class="setup-table" v-for="player in playersData.sort((a, b) => a.number - b.number)">
                                 <th>{{ player.number }}</th>
                                 <td><input v-model="player.name" style="max-width: 350px; margin: auto;"
-                                        class="form-control form-control-sm" :placeholder="`Player #${player.number}`">
+                                        class="form-control form-control-sm"
+                                        :placeholder="`${t('setup.player')} #${player.number}`">
                                 </td>
                                 <td>
                                     <i @click="swapPlayerNumbers(player.number, player.number - 1)"
@@ -180,7 +185,7 @@ function validateSettings() {
                 <button
                     style="width: 100%; max-width: 1200px; border-radius: 0 0 3px 3px; border-top: 3px solid #555557;"
                     type="button" @click="validateSettings()" class="btn btn-dark">
-                    Start the game
+                    {{ t("setup.startBtn") }}
                 </button>
             </div>
         </div>
