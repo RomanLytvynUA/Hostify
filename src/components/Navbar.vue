@@ -1,18 +1,12 @@
 <script setup>
 import { computed } from 'vue'
 import { useStore } from '@/store';
+
 import Player from './Player.vue'
 import Dashboard from './Dashboard.vue'
-import { useI18n } from 'vue-i18n';
-const { t, locale, availableLocales, getLocaleMessage } = useI18n({ useScope: 'global' })
+import LanguageSelector from './LanguageSelector.vue';
 
 const routeName = computed(() => useStore().currentRoute)
-
-
-const setLocale = (localeName) => {
-    locale.value = localeName;
-    localStorage.setItem('lang', localeName);
-}
 </script>
 
 
@@ -33,27 +27,9 @@ const setLocale = (localeName) => {
             <!-- Right-aligned section -->
             <ul class="navbar-nav d-flex align-items-center position-absolute"
                 style="right: 16px; top: 50%; transform: translateY(-50%);">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                        {{ t('localeEmoji') }}
-                    </a>
-                    <ul class="dropdown-menu w-auto">
-                        <button v-for="availableLocale in availableLocales" class="dropdown-item"
-                            @click.prevent="setLocale(availableLocale)">
-                            {{ getLocaleMessage(availableLocale).localeEmoji }}
-                        </button>
-                    </ul>
-                </li>
+                <LanguageSelector />
             </ul>
 
         </div>
     </nav>
 </template>
-
-<style scoped>
-.navbar .dropdown-menu.show {
-    min-width: inherit;
-    display: inline-block;
-}
-</style>
