@@ -158,7 +158,7 @@ const evaluateMafiaChoices = () => {
         <!-- Best Guess -->
         <div v-if="state === 'bestGuess'">
             <p class="secondary-txt" style="margin-bottom: 8px;">
-                {{ t("night.sheriffSubtitle").replace("PLAYER_NAME", `#${bestGuessPlayer.number} -
+                {{ t("night.bestGuessSubtitle").replace("PLAYER_NAME", `#${bestGuessPlayer.number} -
                 ${bestGuessPlayer.name}`) }}
             </p>
             <div class="row justify-content-center mb-3">
@@ -167,7 +167,7 @@ const evaluateMafiaChoices = () => {
                         <option hidden></option>
                         <option v-for="player in playersData" :value="player.number">#{{ player.number }} - {{
                             player.name
-                        }}</option>
+                            }}</option>
                     </select>
                 </div>
             </div>
