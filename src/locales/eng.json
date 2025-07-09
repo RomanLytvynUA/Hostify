@@ -73,5 +73,12 @@
         "fouls": "Fouls",
         "expel": "Expel",
         "authorizeBtn": "Authorize changes"
+    },
+    "results": {
+        "title": "The Game Has Finished!",
+        "mafiaWins": "Congratulations to the mafia team!",
+        "civiliansWin": "Congratulations to the civilians team!",
+        "info": "Don was player DON_NAME, mafia - MAFIA_NAMES, sheriff - player SHERIFF_NAME.",
+        "downloadLogBtn": "Download the game log"
     }
 }
